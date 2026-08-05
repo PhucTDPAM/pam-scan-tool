@@ -514,7 +514,7 @@ function videoRow(v, prefix){
 function renderHotTable(list, prefixFn){
   if(!list.length) return `<div class="panel"><div class="empty">Chưa có video nào vượt ngưỡng "đang lên".</div></div>`;
   let html = `<div class="panel"><table><thead><tr><th></th><th>Tiêu đề${prefixFn?' / Nguồn':''}</th><th>VPH</th><th>View</th><th>Like</th><th>Cmt</th><th>Ngày · Giờ đăng</th><th></th></tr></thead><tbody>`;
-  list.slice(0,20).forEach(v => html += videoRn sàng phân tích sheet đang chọn.');
+  list.slice(0,20).forEach(v => html += videoRow(v, prefixFn ? prefixFn(v) : null));  html += `</tbody></table></div>`;
 }
 
 function renderActiveTab(){
