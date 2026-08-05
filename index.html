@@ -514,10 +514,84 @@ function videoRow(v, prefix){
 function renderHotTable(list, prefixFn){
   if(!list.length) return `<div class="panel"><div class="empty">Chưa có video nào vượt ngưỡng "đang lên".</div></div>`;
   let html = `<div class="panel"><table><thead><tr><th></th><th>Tiêu đề${prefixFn?' / Nguồn':''}</th><th>VPH</th><th>View</th><th>Like</th><th>Cmt</th><th>Ngày · Giờ đăng</th><th></th></tr></thead><tbody>`;
-  list.slice(0,20).forEach(v => html += videoRow(v, prefixFn ? prefixFn(v) : null));  html += `</tbody></table></div>`;
+  list.slice(0,20).forEach(v => html += videoRow(v, prefixFn ? prefixFn(v) : null));
+    html += `</tbody></table></div>`;
+    return html;
 }
-
-function renderActiveTab(){
+          
+          function renderKeywordPanel(list){
+              const freq = {};
+              list.forEach(v => extractKeywords(v.title).forEach(w => freq[w] = (freq[w]||0)+1));
+              const top = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,14);
+              if(!top.length) return '';
+              return `<div class="panel">
+                  <div class="kw-title">Từ khóa xuất hiện nhiều nhất trong các video đang lên</div>
+                      <div class="kw-list">${top.map(([w,c]) => `<span class="kw-chip"><b>${w}</b> · ${c}</span>`).join('')}</div>
+                        </div>`;
+          }
+          
+          let channelDataMap = {};
+          
+          function renderChannelBlock(r, uid){
+              let html = `<div class="channel-block panel">`;
+              if(r.channel.error){
+                    html += `<div class="channel-head"><span class="ch-name">${r.channel.title}</span><span class="ch-meta" style="color:var(--hot)">${r.channel.error}</span></div>`;
+              } else {
+                    const canAnalyze = r.videos.length > 0;
+                    if(canAnalyze) channelDataMap[uid] = { videos: r.videos, channelTitle: r.channel.title };
+                    html += `<div class="channel-head">
+                          ${r.channel.avatar ? `<img class="ch-avatar" src="${r.channel.avatar}">` : ''}
+                                <span class="ch-name">${r.channel.title}</span>
+                                      <span class="ch-meta">${r.videos.length} video · ${r.videos.filter(v=>v.hot).length} đang lên</span>
+                                            ${canAnalyze ? `<button class="btn secondary ch-ai-btn" id="chAiBtn_${uid}" onclick="analyzeChannel('${uid}')">🤖 Phân tích kênh</button>` : ''}
+                                                </div>`;
+                    if(r.videos.length){
+                            html += `<table><thead><tr><th></th><th>Tiêu đề</th><th>VPH</th><th>View</th><th>Like</th><th>Cmt</th><th>Ngày · Giờ đăng</th><th></th></tr></thead><tbody>`;
+                            r.videos.forEach(v => html += videoRow(v));
+                            html += `</tbody></table>`;
+                    } else {
+                            html += `<div class="empty">Không có video nào trong khung thời gian đã chọn.</div>`;
+                    }
+                    if(canAnalyze){
+                            html += `<div class="status" id="chAiStatus_${uid}" style="margin-top:10px;"></div><div id="chAiOutput_${uid}"></div>`;
+                    }
+              }
+              html += `</div>`;
+              return html;
+          }
+          
+          function renderTabs(){
+              const bar = document.getElementById('tabBar');
+              if(!TOPICS.length){ bar.innerHTML = ''; return; }
+              let html = `<button class="sheet-tab ${activeTab==='ALL'?'active':''}" onclick="switchTab('ALL')">📊 Tất cả</button>`;
+              TOPICS.forEach(t => {
+                    html += `<button class="sheet-tab ${activeTab===t.id?'active':''}" onclick="switchTab('${t.id}')">${t.name}</button>`;
+              });
+              bar.innerHTML = html;
+          }
+          
+          function updateAIPanelVisibility(){
+              const notice = document.getElementById('aiAllNotice');
+              const controls = document.getElementById('aiControls');
+              if(activeTab === 'ALL'){
+                    notice.style.display = 'block';
+                    controls.style.display = 'none';
+              } else {
+                    notice.style.display = 'none';
+                    controls.style.display = 'block';
+              }
+          }
+          
+          function switchTab(id){
+              activeTab = id;
+              renderTabs();
+              renderActiveTab();
+              updateAIPanelVisibility();
+              document.getElementById('aiOutput').innerHTML = '';
+              aiStatusSet('Sẵn sàng phân tích sheet đang chọn.');
+          }
+          
+          function renderActiveTab(){
   const container = document.getElementById('resultsContent');
   channelDataMap = {};
   if(!TOPICS.length){ container.innerHTML = ''; return; }
