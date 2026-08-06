@@ -126,6 +126,9 @@ th{text-align:left; color:var(--dim); font-weight:500; font-size:12px; text-tran
 td{padding:16px 10px; border-bottom:1px solid rgba(36,43,61,0.6); vertical-align:middle;}
 tr:hover td{background:rgba(255,255,255,0.02);}
 .thumb{width:112px; height:63px; object-fit:cover; border-radius:6px; display:block;}
+  .thumb-dl-btn{display:block; width:112px; margin-top:4px; background:var(--panel2); border:1px solid var(--border); color:var(--dim); border-radius:4px; padding:3px 0; font-size:10.5px; cursor:pointer; text-align:center; font-family:'Inter',sans-serif;}
+  .thumb-dl-btn:hover{color:var(--mint); border-color:var(--mint);}
+  .thumb-dl-btn:disabled{opacity:0.6; cursor:wait;}
 .vtitle{color:var(--text); text-decoration:none; font-weight:500; font-size:15px;}
 .vtitle:hover{color:var(--mint);}
 .type-tag{font-size:11px; color:var(--dim); font-family:'JetBrains Mono',monospace; border:1px solid var(--border); border-radius:4px; padding:2px 7px; margin-left:7px;}
@@ -542,8 +545,12 @@ function videoRow(v, prefix){
     const badge = v.hot ? `<span class="badge">🔥 Đang lên</span>` : '';
   const tag = v.isShort ? 'Shorts' : 'Video';
   const prefixHtml = prefix ? `<div class="dim-cell" style="margin-bottom:2px">${prefix}</div>` : '';
+    videoDataMap[v.id] = v.title;
   return `<tr>
-    <td><a href="https://youtube.com/watch?v=${v.id}" target="_blank"><img class="thumb" src="${v.thumb}"></a></td>
+        <td>
+              <a href="https://youtube.com/watch?v=${v.id}" target="_blank"><img class="thumb" src="${v.thumb}"></a>
+                    <button class="thumb-dl-btn" onclick="downloadThumbnail('${v.id}', this)" title="Tải thumbnail chất lượng cao nhất (.jpg)">⬇ Tải ảnh</button>
+                        </td>
     <td>${prefixHtml}<a class="vtitle" href="https://youtube.com/watch?v=${v.id}" target="_blank">${v.title}</a><span class="type-tag">${tag}</span></td>
     <td class="vph" style="color:${v.hot?'var(--hot)':'var(--text)'}">${fmtVph(v.vph)}</td>
     <td class="dim-cell">${fmtNum(v.views)}</td>
@@ -574,6 +581,7 @@ function renderHotTable(list, prefixFn){
           }
           
           let channelDataMap = {};
+          let videoDataMap = {};
           
           function renderChannelBlock(r, uid){
               let html = `<div class="channel-block panel">`;
@@ -637,6 +645,7 @@ function renderHotTable(list, prefixFn){
           function renderActiveTab(){
   const container = document.getElementById('resultsContent');
   channelDataMap = {};
+              videoDataMap = {};
   if(!TOPICS.length){ container.innerHTML = ''; return; }
   let html = '';
 
@@ -875,7 +884,64 @@ Trả lời bằng tiếng Việt, súc tích, ưu tiên gạch đầu dòng, kh
   btn.disabled = false;
 }
 
-// Khôi phục chủ đề/kênh/cài đặt đã lưu từ lần trước (nếu có), và tự động lưu mỗi khi có thay đổi.
+// Tải thumbnail chất lượng cao nhất: thử maxres -> sd -> hq -> mq -> default,
+          // dùng ảnh đầu tiên có kích thước thật (YouTube trả ảnh giữ chỗ 120x90 khi không có bản maxres/sd).
+          async function fetchBestThumbnailBlob(videoId){
+              const candidates = [
+                    `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
+                    `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`,
+                    `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+                    `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
+                    `https://i.ytimg.com/vi/${videoId}/default.jpg`
+                  ];
+              let fallback = null;
+              for(const url of candidates){
+                    try{
+                            const res = await fetch(url);
+                            if(!res.ok) continue;
+                            const blob = await res.blob();
+                            const width = await new Promise((resolve) => {
+                                      const img = new Image();
+                                      const objUrl = URL.createObjectURL(blob);
+                                      img.onload = () => { resolve(img.naturalWidth); URL.revokeObjectURL(objUrl); };
+                                      img.onerror = () => { resolve(0); URL.revokeObjectURL(objUrl); };
+                                      img.src = objUrl;
+                            });
+                            if(width > 120) return blob;
+                            if(!fallback) fallback = blob;
+                    }catch(e){ }
+              }
+              return fallback;
+          }
+          
+          function sanitizeFilename(name){
+              return (name || 'thumbnail').replace(/[\\/:*?"<>|]/g, '_').trim().slice(0, 100);
+          }
+          
+          async function downloadThumbnail(videoId, btn){
+              const original = btn.textContent;
+              btn.textContent = '...';
+              btn.disabled = true;
+              try{
+                    const blob = await fetchBestThumbnailBlob(videoId);
+                    if(!blob) throw new Error('Không tìm thấy thumbnail.');
+                    const title = videoDataMap[videoId] || videoId;
+                    const objUrl = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = objUrl;
+                    a.download = sanitizeFilename(title) + '.jpg';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(objUrl), 2000);
+              }catch(e){
+                    alert('Không tải được thumbnail cho video này.');
+              }
+              btn.textContent = original;
+              btn.disabled = false;
+          }
+          
+          // Khôi phục chủ đề/kênh/cài đặt đã lưu từ lần trước (nếu có), và tự động lưu mỗi khi có thay đổi.
 loadConfig();
   if(!TEAM_PASSWORD){ showGate(); }
   document.getElementById('gatePassword').addEventListener('keydown', (e) => { if(e.key === 'Enter') submitGatePassword(); });
