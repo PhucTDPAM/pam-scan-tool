@@ -137,10 +137,29 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 /* AI panel */
 .ai-result{margin-top:16px; padding-top:16px; border-top:1px solid var(--border); line-height:1.75; font-size:14.5px; color:var(--text); font-family:'Inter',sans-serif;}
 .ai-result strong{color:var(--mint); font-weight:600;}
+/* password gate */
+.gate-overlay{position:fixed; inset:0; background:rgba(11,14,20,0.97); z-index:1000; display:flex; align-items:center; justify-content:center;}
+.gate-box{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:32px; max-width:340px; width:90%; text-align:center;}
+.gate-box h2{font-size:16px; margin:0 0 6px;}
+.gate-box p{color:var(--dim); font-size:12.5px; font-family:'Inter',sans-serif; margin:0 0 18px;}
+.gate-box input{margin-bottom:12px; text-align:center;}
+.gate-box .btn{width:100%;}
+.gate-err{color:var(--hot); font-size:12.5px; font-family:'Inter',sans-serif; margin-top:10px; min-height:16px;}
 </style>
   </head>
   <body>
   <div class="wrap">
+
+      <div class="gate-overlay" id="gateOverlay" style="display:none;">
+            <div class="gate-box">
+                    <h2>🔒 CHECK THỊ TRƯỜNG</h2>
+                  <p>Nhập mật khẩu chung của nhóm để tiếp tục.</p>
+                  <input type="password" id="gatePassword" placeholder="Mật khẩu">
+                  <button class="btn" onclick="submitGatePassword()">Vào tool</button>button>
+                  <div class="gate-err" id="gateErr"></div>div>
+            </div>div>
+      </div>div>
+  </p></h2>
 
     <div class="header"><img class="brand-logo" src="pam-media-logo.png" alt="PAM Media"><div class="dot"></div><h1>Check thị trường</h1></div>
     <div class="sub">Quét nhiều chủ đề cùng lúc · mỗi chủ đề 1 sheet riêng · tính VPH · lọc video đang lên · phân tích AI theo từng chủ đề</div>
@@ -222,6 +241,29 @@ const PROXY_BASE = 'https://pam-scan-proxy.ducphuc20703.workers.dev';
 const GEMINI_PROXY_BASE = 'https://pam-gemini-proxy.vercel.app';
 
 let TOPICS = [];       // [{id, name, results:[{channel, videos}]}]
+          let TEAM_PASSWORD = localStorage.getItem('teamPassword') || '';
+
+          function showGate(errMsg){
+              document.getElementById('gateOverlay').style.display = 'flex';
+              document.getElementById('gateErr').textContent = errMsg || '';
+              document.getElementById('gatePassword').focus();
+          }
+          function hideGate(){
+              document.getElementById('gateOverlay').style.display = 'none';
+          }
+          function submitGatePassword(){
+              const val = document.getElementById('gatePassword').value.trim();
+              if(!val){ document.getElementById('gateErr').textContent = 'Nhập mật khẩu.'; return; }
+              TEAM_PASSWORD = val;
+              localStorage.setItem('teamPassword', val);
+              hideGate();
+          }
+          function handleAuthError(){
+              TEAM_PASSWORD = '';
+              localStorage.removeItem('teamPassword');
+              showGate('Sai mật khẩu, vui lòng nhập lại.');
+          }
+          
 let activeTab = null;  // 'ALL' or topic id
 let autoTimer = null;
 let topicCounter = 1;
@@ -345,7 +387,8 @@ function parseChannelLine(line){
 async function apiGet(path, params){
   const url = new URL(PROXY_BASE + '/youtube/' + path);
   Object.entries(params).forEach(([k,v]) => url.searchParams.set(k,v));
-  const res = await fetch(url.toString());
+    const res = await fetch(url.toString(), { headers: { 'X-Team-Password': TEAM_PASSWORD } });
+    if(res.status === 401){ handleAuthError(); throw new Error('Sai mật khẩu truy cập.'); }
   const data = await res.json();
   if(!res.ok){
     const msg = data && data.error ? data.error.message : ('Lỗi HTTP ' + res.status);
@@ -676,9 +719,10 @@ async function callGeminiProxy(model, parts, onRetry){
     try{
       const res = await fetch(url, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body
-});
+                  headers: {'Content-Type': 'application/json', 'X-Team-Password': TEAM_PASSWORD},
+                body
+      });
+              if(res.status === 401){ handleAuthError(); throw new Error('Sai mật khẩu truy cập.'); }
       const data = await res.json().catch(() => null);
 
       if(res.ok && data) return data;
@@ -833,6 +877,8 @@ Trả lời bằng tiếng Việt, súc tích, ưu tiên gạch đầu dòng, kh
 
 // Khôi phục chủ đề/kênh/cài đặt đã lưu từ lần trước (nếu có), và tự động lưu mỗi khi có thay đổi.
 loadConfig();
+  if(!TEAM_PASSWORD){ showGate(); }
+  document.getElementById('gatePassword').addEventListener('keydown', (e) => { if(e.key === 'Enter') submitGatePassword(); });
 document.getElementById('topicContainer').addEventListener('input', saveConfig);
 document.getElementById('numVideos').addEventListener('input', saveConfig);
 document.getElementById('numDays').addEventListener('input', saveConfig);
