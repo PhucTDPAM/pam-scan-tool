@@ -87,6 +87,7 @@ textarea{min-height:96px; resize:vertical; line-height:1.5;}
 .topic-channels{width:100%; min-height:84px; background:var(--panel); border:1px solid var(--border); border-radius:6px;
   color:var(--text); padding:8px; font-family:'Inter',sans-serif; font-size:12.5px; resize:vertical; outline:none;}
 .topic-channels:focus{border-color:var(--mint);}
+  .topic-scan-btn{width:100%; margin-top:8px; padding:8px 0; font-size:11.5px;}
 .add-topic-btn{background:transparent; border:1px dashed var(--border); color:var(--dim); border-radius:8px; padding:14px;
   cursor:pointer; font-family:'Oswald',sans-serif; text-transform:uppercase; font-size:12px; letter-spacing:.04em;
   display:flex; align-items:center; justify-content:center; min-height:70px; width:100%;}
@@ -182,6 +183,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
           <textarea class="topic-channels" placeholder="https://youtube.com/@tenkenh
   @tenkenh2
   UCxxxxxxxxxxxxxxxxxxxxxx"></textarea>
+                  <button class="btn secondary topic-scan-btn" onclick="runScanTopic('topic_1', this)">Quét chủ đề này</button>
         </div>
         <button class="add-topic-btn" onclick="addTopicBlock()">+ Thêm chủ đề</button>
     </div>
@@ -328,6 +330,7 @@ function addTopicBlock(name, channelsText){
         <textarea class="topic-channels" placeholder="https://youtube.com/@tenkenh
     @tenkenh2
     UCxxxxxxxxxxxxxxxxxxxxxx">${channelsText || ''}</textarea>
+        <button class="btn secondary topic-scan-btn" onclick="runScanTopic('${id}', this)">Quét chủ đề này</button>
       `;
   document.getElementById('topicContainer').insertBefore(div, document.querySelector('.add-topic-btn'));
   saveConfig();
@@ -467,63 +470,114 @@ function extractKeywords(title){
   return clean.split(/\s+/).filter(w => w.length > 1 && !STOPWORDS.has(w) && !/^\d+$/.test(w));
 }
 
-async function runScan(){
-  const topicsInput = collectTopicsInput();
-  const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
-  const numDays = parseInt(document.getElementById('numDays').value) || 14;
-  const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
+// Quét dữ liệu cho 1 chủ đề (dùng chung cho cả "quét tất cả" và "quét riêng 1 chủ đề").
+          async function scanOneTopic(topic, numVideos, threshold, cutoff, onProgress){
+              const topicResults = [];
+              let done = 0;
+              for(const raw of topic.lines){
+                    done++;
+                    if(onProgress) onProgress(done, raw);
+                    try{
+                            const parsed = parseChannelLine(raw);
+                            const ch = await resolveChannel(parsed);
+                            const ids = await fetchRecentVideoIds(ch.uploadsPlaylist, numVideos);
+                            let videos = await fetchVideoDetails(ids);
+                            videos = videos.filter(v => v.publishedAt >= cutoff);
+                      
+                            const shorts = videos.filter(v => v.isShort);
+                            const longs = videos.filter(v => !v.isShort);
+                            const avg = arr => arr.length ? arr.reduce((s,v)=>s+v.vph,0)/arr.length : 0;
+                            const avgShort = avg(shorts), avgLong = avg(longs);
+                      
+                            videos.forEach(v => {
+                                      const base = v.isShort ? avgShort : avgLong;
+                                      v.hot = base > 0 && v.vph >= base * threshold;
+                                      v.channelTitle = ch.title;
+                                      v.topicName = topic.name;
+                            });
+                            videos.sort((a,b) => b.vph - a.vph);
+                      
+                            topicResults.push({channel: ch, videos});
+                    }catch(e){
+                            topicResults.push({channel:{title: raw, error: e.message}, videos:[]});
+                    }
+              }
+              return {id: topic.id, name: topic.name, results: topicResults};
+          }
+          
+          async function runScan(){
+    const topicsInput = collectTopicsInput();
+    const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
+    const numDays = parseInt(document.getElementById('numDays').value) || 14;
+    const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
 
-  if(!topicsInput.length){ log('Chưa nhập kênh nào.', true); return; }
+    if(!topicsInput.length){ log('Chưa nhập kênh nào.', true); return; }
 
-  document.getElementById('runBtn').disabled = true;
-  TOPICS = [];
-  const cutoff = Date.now() - numDays*24*3600000;
-  const totalChannels = topicsInput.reduce((s,t) => s + t.lines.length, 0);
-  let doneCount = 0;
+    document.getElementById('runBtn').disabled = true;
+    TOPICS = [];
+    const cutoff = Date.now() - numDays*24*3600000;
+    const totalChannels = topicsInput.reduce((s,t) => s + t.lines.length, 0);
+    let doneCount = 0;
 
-  for(const topic of topicsInput){
-        const topicResults = [];
-        for(const raw of topic.lines){
-      doneCount++;
-      log(`Đang quét ${doneCount}/${totalChannels} — [${topic.name}] ${raw}`);
-      try{
-        const parsed = parseChannelLine(raw);
-        const ch = await resolveChannel(parsed);
-        const ids = await fetchRecentVideoIds(ch.uploadsPlaylist, numVideos);
-        let videos = await fetchVideoDetails(ids);
-        videos = videos.filter(v => v.publishedAt >= cutoff);
+    for(const topic of topicsInput){
+          const result = await scanOneTopic(topic, numVideos, threshold, cutoff, (d, raw) => {
+                  doneCount++;
+                  log(`Đang quét ${doneCount}/${totalChannels} — [${topic.name}] ${raw}`);
+          });
+          TOPICS.push(result);
+    }
 
-        const shorts = videos.filter(v => v.isShort);
-        const longs = videos.filter(v => !v.isShort);
-        const avg = arr => arr.length ? arr.reduce((s,v)=>s+v.vph,0)/arr.length : 0;
-        const avgShort = avg(shorts), avgLong = avg(longs);
+    const now = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    log(`Xong. Đã quét ${totalChannels} kênh trong ${topicsInput.length} chủ đề — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
+    document.getElementById('runBtn').disabled = false;
 
-        videos.forEach(v => {
-                    const base = v.isShort ? avgShort : avgLong;
-                    v.hot = base > 0 && v.vph >= base * threshold;
-          v.channelTitle = ch.title;
-          v.topicName = topic.name;
-      });
-        videos.sort((a,b) => b.vph - a.vph);
-
-        topicResults.push({channel: ch, videos});
-        }catch(e){
-                  topicResults.push({channel:{title: raw, error: e.message}, videos:[]});
+    activeTab = 'ALL';
+    renderTabs();
+    renderActiveTab();
+    updateAIPanelVisibility();
 }
-}
-    TOPICS.push({id: topic.id, name: topic.name, results: topicResults});
-}
 
-  const now = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  log(`Xong. Đã quét ${totalChannels} kênh trong ${topicsInput.length} chủ đề — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
-  document.getElementById('runBtn').disabled = false;
+          async function runScanTopic(topicId, btn){
+              const card = document.querySelector(`.topic-card[data-id="${topicId}"]`);
+              if(!card) return;
+              const name = card.querySelector('.topic-name').value.trim() || 'Chủ đề';
+              const lines = card.querySelector('.topic-channels').value.split('\n').map(l => l.trim()).filter(Boolean);
+              if(!lines.length){ log(`Chủ đề "${name}" chưa nhập kênh nào.`, true); return; }
 
-  activeTab = 'ALL';
-  renderTabs();
-  renderActiveTab();
-  updateAIPanelVisibility();
-}
+              const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
+              const numDays = parseInt(document.getElementById('numDays').value) || 14;
+              const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
+              const cutoff = Date.now() - numDays*24*3600000;
+
+              const originalText = btn.textContent;
+              btn.disabled = true;
+              btn.textContent = 'Đang quét...';
+              document.getElementById('runBtn').disabled = true;
+
+              let doneCount = 0;
+              const result = await scanOneTopic({id: topicId, name, lines}, numVideos, threshold, cutoff, (d, raw) => {
+                    doneCount++;
+                    log(`Đang quét "${name}": ${doneCount}/${lines.length} — ${raw}`);
+              });
+
+              const idx = TOPICS.findIndex(t => t.id === topicId);
+              if(idx >= 0) TOPICS[idx] = result; else TOPICS.push(result);
+
+              const now = new Date();
+              const pad = n => String(n).padStart(2,'0');
+              log(`Xong "${name}" — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
+
+              btn.disabled = false;
+              btn.textContent = originalText;
+              document.getElementById('runBtn').disabled = false;
+
+              activeTab = topicId;
+              renderTabs();
+              renderActiveTab();
+              updateAIPanelVisibility();
+          }
+          
 
 function fmtNum(n){
     return n.toLocaleString('vi-VN');
