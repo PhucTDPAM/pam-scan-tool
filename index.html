@@ -190,8 +190,8 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 
     <div class="row-inline">
         <div class="field-inline">
-          <span class="label">Số video gần nhất / kênh</span>
-          <input type="number" id="numVideos" value="20" min="5" max="50">
+        <span class="label">Số video tối đa / kênh</span>
+                  <input type="number" id="numVideos" value="30" min="5" max="300">
         </div>
         <div class="field-inline">
           <span class="label">Chỉ xét video trong (ngày)</span>
@@ -203,7 +203,8 @@ tr:hover td{background:rgba(255,255,255,0.02);}
               </div>
             </div>
 
-            <div class="actions">
+                <div class="hint" style="margin-top:8px;">Tool tự lấy đủ video trong đúng số ngày đã chọn (tự phân trang) — số "video tối đa" chỉ là giới hạn an toàn, không phải số video cố định phải lấy.</div>
+    <div class="actions">
               <button class="btn" id="runBtn" onclick="runScan()">Quét tất cả chủ đề</button>
               <button class="btn secondary" onclick="resetAll()">Xoá kết quả</button>
               <label class="auto-toggle">
@@ -427,10 +428,32 @@ async function resolveChannel(parsed){
 };
 }
 
-async function fetchRecentVideoIds(playlistId, maxResults){
-  const data = await apiGet('playlistItems', {part:'contentDetails', playlistId, maxResults: Math.min(maxResults,50)});
-  return (data.items || []).map(it => it.contentDetails.videoId);
-}
+// Tự động lấy nhiều trang cho đến khi đủ maxResults HOẶC video đã cũ hơn cutoff (ngoài khung ngày quan tâm).
+          // Nhờ vậy "video tối đa" chỉ là giới hạn an toàn, còn thực tế tool lấy đủ toàn bộ video trong đúng số ngày đã chọn.
+          async function fetchRecentVideoIds(playlistId, maxResults, cutoff){
+              let ids = [];
+              let pageToken = '';
+              const maxPages = 10; // an toàn: tối đa 500 video/kênh mỗi lần quét, tránh tốn quota vô hạn nếu cấu hình sai
+              for(let page = 0; page < maxPages; page++){
+                    const params = {part:'contentDetails', playlistId, maxResults:50};
+                    if(pageToken) params.pageToken = pageToken;
+                    const data = await apiGet('playlistItems', params);
+                    const items = data.items || [];
+                    if(!items.length) break;
+
+                    let hitCutoff = false;
+                    for(const it of items){
+                            ids.push(it.contentDetails.videoId);
+                            const publishedAt = new Date(it.contentDetails.videoPublishedAt || 0).getTime();
+                            if(cutoff && publishedAt && publishedAt < cutoff){ hitCutoff = true; break; }
+                    }
+                    if(hitCutoff) break;
+                    if(ids.length >= maxResults) break;
+                    if(!data.nextPageToken) break;
+                    pageToken = data.nextPageToken;
+              }
+              return ids.slice(0, maxResults);
+          }
 
 function parseDuration(iso){
   const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
@@ -440,29 +463,34 @@ function parseDuration(iso){
 }
 
 async function fetchVideoDetails(ids){
-  if(!ids.length) return [];
-  const data = await apiGet('videos', {part:'snippet,statistics,contentDetails', id: ids.join(',')});
-  const now = Date.now();
-  return (data.items || []).map(it => {
-        const publishedAt = new Date(it.snippet.publishedAt).getTime();
-        const hours = Math.max((now - publishedAt) / 3600000, 0.1);
-    const views = parseInt(it.statistics.viewCount || 0);
-    const likes = it.statistics.likeCount !== undefined ? parseInt(it.statistics.likeCount) : null;
-    const comments = it.statistics.commentCount !== undefined ? parseInt(it.statistics.commentCount) : null;
-    const durSec = parseDuration(it.contentDetails.duration || 'PT0S');
-    return {
-            id: it.id,
-            title: it.snippet.title,
-            thumb: it.snippet.thumbnails.medium ? it.snippet.thumbnails.medium.url : it.snippet.thumbnails.default.url,
-            publishedAt,
-            views,
-            likes,
-            comments,
-            hours,
-            vph: views / hours,
-            isShort: durSec > 0 && durSec <= 180
-      };
-});
+    if(!ids.length) return [];
+    const chunks = [];
+    for(let i = 0; i < ids.length; i += 50) chunks.push(ids.slice(i, i + 50));
+    const responses = await Promise.all(chunks.map(chunk =>
+          apiGet('videos', {part:'snippet,statistics,contentDetails', id: chunk.join(',')})
+        ));
+    const allItems = responses.flatMap(data => data.items || []);
+    const now = Date.now();
+    return allItems.map(it => {
+          const publishedAt = new Date(it.snippet.publishedAt).getTime();
+          const hours = Math.max((now - publishedAt) / 3600000, 0.1);
+          const views = parseInt(it.statistics.viewCount || 0);
+          const likes = it.statistics.likeCount !== undefined ? parseInt(it.statistics.likeCount) : null;
+          const comments = it.statistics.commentCount !== undefined ? parseInt(it.statistics.commentCount) : null;
+          const durSec = parseDuration(it.contentDetails.duration || 'PT0S');
+          return {
+                  id: it.id,
+                  title: it.snippet.title,
+                  thumb: it.snippet.thumbnails.medium ? it.snippet.thumbnails.medium.url : it.snippet.thumbnails.default.url,
+                  publishedAt,
+                  views,
+                  likes,
+                  comments,
+                  hours,
+                  vph: views / hours,
+                  isShort: durSec > 0 && durSec <= 180
+          };
+    });
 }
 
 function extractKeywords(title){
@@ -470,25 +498,36 @@ function extractKeywords(title){
   return clean.split(/\s+/).filter(w => w.length > 1 && !STOPWORDS.has(w) && !/^\d+$/.test(w));
 }
 
-// Quét dữ liệu cho 1 chủ đề (dùng chung cho cả "quét tất cả" và "quét riêng 1 chủ đề").
+// Chạy tối đa `limit` việc đồng thời thay vì tuần tự — tăng tốc quét nhiều kênh rõ rệt.
+          async function runWithConcurrency(items, limit, worker){
+              const results = new Array(items.length);
+              let nextIndex = 0;
+              async function runNext(){
+                    while(nextIndex < items.length){
+                            const i = nextIndex++;
+                            results[i] = await worker(items[i]);
+                    }
+              }
+              const runners = Array.from({length: Math.min(limit, items.length)}, runNext);
+              await Promise.all(runners);
+              return results;
+          }
+
           async function scanOneTopic(topic, numVideos, threshold, cutoff, onProgress){
-              const topicResults = [];
               let done = 0;
-              for(const raw of topic.lines){
-                    done++;
-                    if(onProgress) onProgress(done, raw);
+              const topicResults = await runWithConcurrency(topic.lines, 6, async (raw) => {
                     try{
                             const parsed = parseChannelLine(raw);
                             const ch = await resolveChannel(parsed);
-                            const ids = await fetchRecentVideoIds(ch.uploadsPlaylist, numVideos);
+                            const ids = await fetchRecentVideoIds(ch.uploadsPlaylist, numVideos, cutoff);
                             let videos = await fetchVideoDetails(ids);
                             videos = videos.filter(v => v.publishedAt >= cutoff);
-                      
+
                             const shorts = videos.filter(v => v.isShort);
                             const longs = videos.filter(v => !v.isShort);
                             const avg = arr => arr.length ? arr.reduce((s,v)=>s+v.vph,0)/arr.length : 0;
                             const avgShort = avg(shorts), avgLong = avg(longs);
-                      
+
                             videos.forEach(v => {
                                       const base = v.isShort ? avgShort : avgLong;
                                       v.hot = base > 0 && v.vph >= base * threshold;
@@ -496,12 +535,16 @@ function extractKeywords(title){
                                       v.topicName = topic.name;
                             });
                             videos.sort((a,b) => b.vph - a.vph);
-                      
-                            topicResults.push({channel: ch, videos});
+
+                            done++;
+                            if(onProgress) onProgress(done, raw);
+                            return {channel: ch, videos};
                     }catch(e){
-                            topicResults.push({channel:{title: raw, error: e.message}, videos:[]});
+                            done++;
+                            if(onProgress) onProgress(done, raw);
+                            return {channel:{title: raw, error: e.message}, videos:[]};
                     }
-              }
+              });
               return {id: topic.id, name: topic.name, results: topicResults};
           }
           
