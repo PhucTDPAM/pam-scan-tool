@@ -195,7 +195,11 @@ tr:hover td{background:rgba(255,255,255,0.02);}
         </div>
         <div class="field-inline">
           <span class="label">Chỉ xét video trong (ngày)</span>
-          <input type="number" id="numDays" value="14" min="1" max="60">
+                  <input type="number" id="numDays" value="14" min="1" max="3650">
+                  <label style="display:flex; align-items:center; gap:6px; margin-top:6px; font-size:11.5px; color:var(--dim); cursor:pointer; font-family:'Inter',sans-serif;">
+                              <input type="checkbox" id="allTime" onchange="toggleAllTime()" style="accent-color:var(--hot); width:13px; height:13px; cursor:pointer;">
+                              Toàn thời gian
+                  </label>
               </div>
               <div class="field-inline">
                 <span class="label">Ngưỡng "đang lên" (x lần trung bình)</span>
@@ -289,33 +293,43 @@ function collectFullTopicsForSave(){
 
 function saveConfig(){
     try{
-    const cfg = {
-            topics: collectFullTopicsForSave(),
-                    numVideos: document.getElementById('numVideos').value,
-                    numDays: document.getElementById('numDays').value,
-                    threshold: document.getElementById('threshold').value
-              };
-    localStorage.setItem('scanToolConfig', JSON.stringify(cfg));
+          const cfg = {
+                  topics: collectFullTopicsForSave(),
+                  numVideos: document.getElementById('numVideos').value,
+                  numDays: document.getElementById('numDays').value,
+                  threshold: document.getElementById('threshold').value,
+                  allTime: document.getElementById('allTime').checked
+          };
+          localStorage.setItem('scanToolConfig', JSON.stringify(cfg));
     }catch(e){ /* trình duyệt chặn localStorage (chế độ ẩn danh...) -> bỏ qua, không ảnh hưởng chức năng chính */ }
 }
 
-function loadConfig(){
-    let cfg;
-  try{
-    const raw = localStorage.getItem('scanToolConfig');
-    if(!raw) return;
-    cfg = JSON.parse(raw);
-  }catch(e){ return; }
-  if(!cfg) return;
+          function toggleAllTime(){
+              document.getElementById('numDays').disabled = document.getElementById('allTime').checked;
+              saveConfig();
+          }
 
-  if(cfg.topics && cfg.topics.length){
-    document.querySelectorAll('.topic-card').forEach(el => el.remove());
-    cfg.topics.forEach(t => addTopicBlock(t.name, t.channelsText));
-  }
-  if(cfg.numVideos) document.getElementById('numVideos').value = cfg.numVideos;
-  if(cfg.numDays) document.getElementById('numDays').value = cfg.numDays;
-  if(cfg.threshold) document.getElementById('threshold').value = cfg.threshold;
-}
+          function loadConfig(){
+              let cfg;
+              try{
+                    const raw = localStorage.getItem('scanToolConfig');
+                    if(!raw) return;
+                    cfg = JSON.parse(raw);
+              }catch(e){ return; }
+              if(!cfg) return;
+
+              if(cfg.topics && cfg.topics.length){
+                    document.querySelectorAll('.topic-card').forEach(el => el.remove());
+                    cfg.topics.forEach(t => addTopicBlock(t.name, t.channelsText));
+              }
+              if(cfg.numVideos) document.getElementById('numVideos').value = cfg.numVideos;
+              if(cfg.numDays) document.getElementById('numDays').value = cfg.numDays;
+              if(cfg.threshold) document.getElementById('threshold').value = cfg.threshold;
+              if(cfg.allTime){
+                    document.getElementById('allTime').checked = true;
+                    document.getElementById('numDays').disabled = true;
+              }
+          }
 
 function addTopicBlock(name, channelsText){
     topicCounter++;
@@ -515,7 +529,7 @@ function extractKeywords(title){
 
           async function scanOneTopic(topic, numVideos, threshold, cutoff, onProgress){
               let done = 0;
-              const topicResults = await runWithConcurrency(topic.lines, 6, async (raw) => {
+              const rawResults = await runWithConcurrency(topic.lines, 6, async (raw) => {
                     try{
                             const parsed = parseChannelLine(raw);
                             const ch = await resolveChannel(parsed);
@@ -545,42 +559,57 @@ function extractKeywords(title){
                             return {channel:{title: raw, error: e.message}, videos:[]};
                     }
               });
-              return {id: topic.id, name: topic.name, results: topicResults};
+
+              const seenIds = new Set();
+              const topicResults = [];
+              let duplicatesRemoved = 0;
+              for(const r of rawResults){
+                    if(r.channel && r.channel.id){
+                            if(seenIds.has(r.channel.id)){ duplicatesRemoved++; continue; }
+                            seenIds.add(r.channel.id);
+                    }
+                    topicResults.push(r);
+              }
+
+              return {id: topic.id, name: topic.name, results: topicResults, duplicatesRemoved};
+          }
           }
           
           async function runScan(){
-    const topicsInput = collectTopicsInput();
-    const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
-    const numDays = parseInt(document.getElementById('numDays').value) || 14;
-    const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
+              const topicsInput = collectTopicsInput();
+              const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
+              const numDays = parseInt(document.getElementById('numDays').value) || 14;
+              const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
+              const allTime = document.getElementById('allTime').checked;
 
-    if(!topicsInput.length){ log('Chưa nhập kênh nào.', true); return; }
+              if(!topicsInput.length){ log('Chưa nhập kênh nào.', true); return; }
 
-    document.getElementById('runBtn').disabled = true;
-    TOPICS = [];
-    const cutoff = Date.now() - numDays*24*3600000;
-    const totalChannels = topicsInput.reduce((s,t) => s + t.lines.length, 0);
-    let doneCount = 0;
+              document.getElementById('runBtn').disabled = true;
+              TOPICS = [];
+              const cutoff = allTime ? 0 : (Date.now() - numDays*24*3600000);
+              const totalChannels = topicsInput.reduce((s,t) => s + t.lines.length, 0);
+              let doneCount = 0;
 
-    for(const topic of topicsInput){
-          const result = await scanOneTopic(topic, numVideos, threshold, cutoff, (d, raw) => {
-                  doneCount++;
-                  log(`Đang quét ${doneCount}/${totalChannels} — [${topic.name}] ${raw}`);
-          });
-          TOPICS.push(result);
-    }
+              for(const topic of topicsInput){
+                    const result = await scanOneTopic(topic, numVideos, threshold, cutoff, (d, raw) => {
+                            doneCount++;
+                            log(`Đang quét ${doneCount}/${totalChannels} — [${topic.name}] ${raw}`);
+                    });
+                    TOPICS.push(result);
+              }
 
-    const now = new Date();
-    const pad = n => String(n).padStart(2,'0');
-    log(`Xong. Đã quét ${totalChannels} kênh trong ${topicsInput.length} chủ đề — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
-    document.getElementById('runBtn').disabled = false;
+              const now = new Date();
+              const pad = n => String(n).padStart(2,'0');
+              const totalDup = TOPICS.reduce((s,t) => s + (t.duplicatesRemoved||0), 0);
+              const dupNote = totalDup > 0 ? ` (đã bỏ qua ${totalDup} kênh trùng lặp)` : '';
+              log(`Xong. Đã quét ${totalChannels} kênh trong ${topicsInput.length} chủ đề${dupNote} — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
+              document.getElementById('runBtn').disabled = false;
 
-    activeTab = 'ALL';
-    renderTabs();
-    renderActiveTab();
-    updateAIPanelVisibility();
-}
-
+              activeTab = 'ALL';
+              renderTabs();
+              renderActiveTab();
+              updateAIPanelVisibility();
+          }
           async function runScanTopic(topicId, btn){
               const card = document.querySelector(`.topic-card[data-id="${topicId}"]`);
               if(!card) return;
@@ -589,9 +618,7 @@ function extractKeywords(title){
               if(!lines.length){ log(`Chủ đề "${name}" chưa nhập kênh nào.`, true); return; }
 
               const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
-              const numDays = parseInt(document.getElementById('numDays').value) || 14;
-              const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
-              const cutoff = Date.now() - numDays*24*3600000;
+              
 
               const originalText = btn.textContent;
               btn.disabled = true;
@@ -609,7 +636,8 @@ function extractKeywords(title){
 
               const now = new Date();
               const pad = n => String(n).padStart(2,'0');
-              log(`Xong "${name}" — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
+              const dupNote = result.duplicatesRemoved > 0 ? ` (đã bỏ qua ${result.duplicatesRemoved} kênh trùng lặp)` : '';
+              log(`Xong "${name}"${dupNote} — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
 
               btn.disabled = false;
               btn.textContent = originalText;
