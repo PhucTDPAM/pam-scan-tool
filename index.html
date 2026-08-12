@@ -1,1078 +1,1115 @@
 <!DOCTYPE html>
-  <html lang="vi">
+<html lang="vi">
   <head>
-  <meta charset="UTF-8">
-  <title>PAM - Check Thị Trường</title>
-    <link rel="icon" type="image/png" href="pam-media-logo.png">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    <meta charset="UTF-8">
+    <title>Đài quan sát đối thủ</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-:root{
-    --bg:#0B0E14;
-  --panel:#12161F;
-  --panel2:#1A2030;
-  --border:#242B3D;
-  --text:#E7E9F0;
-      --dim:#8A93A8;
-  --hot:#FF5A36;
-      --hot-bg:rgba(255,90,54,0.14);
-  --mint:#4FD1C5;
-  --mint-bg:rgba(79,209,197,0.12);
-}
-*{box-sizing:border-box;}
-body{
-    margin:0; background:var(--bg); color:var(--text);
-  font-family:'Inter',sans-serif;
-  padding:28px 20px 60px;
-}
-h1,h2,h3,.label,.btn,.badge,.tab{font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.04em;}
-.mono{font-family:'JetBrains Mono',monospace;}
-.wrap{max-width:1180px; margin:0 auto;}
+    :root{
+        --bg:#0B0E14;
+        --panel:#12161F;
+        --panel2:#1A2030;
+        --border:#242B3D;
+        --text:#E7E9F0;
+        --dim:#8A93A8;
+        --hot:#FF5A36;
+        --hot-bg:rgba(255,90,54,0.14);
+        --mint:#4FD1C5;
+        --mint-bg:rgba(79,209,197,0.12);
+    }
+    *{box-sizing:border-box;}
+    body{
+        margin:0; background:var(--bg); color:var(--text);
+        font-family:'Inter',sans-serif;
+        padding:28px 20px 60px;
+    }
+    h1,h2,h3,.label,.btn,.badge,.tab{font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.04em;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+    .wrap{max-width:1180px; margin:0 auto;}
 
-/* header */
-.header{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
-.brand-logo{height:42px; width:auto; display:block;}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--hot); box-shadow:0 0 0 0 rgba(255,90,54,.6); animation:pulse 1.8s infinite;}
-@keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(255,90,54,.55);}
-  70%{box-shadow:0 0 0 9px rgba(255,90,54,0);}
-  100%{box-shadow:0 0 0 0 rgba(255,90,54,0);}
-}
-h1{font-size:26px; margin:0; font-weight:700; letter-spacing:.02em;}
-.sub{color:var(--dim); font-size:13.5px; margin:4px 0 26px; font-family:'Inter',sans-serif; letter-spacing:0;}
+    /* header */
+    .header{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
+    .brand-logo{height:42px; width:auto; display:block;}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--hot); box-shadow:0 0 0 0 rgba(255,90,54,.6); animation:pulse 1.8s infinite;}
+    @keyframes pulse{
+        0%{box-shadow:0 0 0 0 rgba(255,90,54,.55);}
+        70%{box-shadow:0 0 0 9px rgba(255,90,54,0);}
+        100%{box-shadow:0 0 0 0 rgba(255,90,54,0);}
+    }
+    h1{font-size:26px; margin:0; font-weight:700; letter-spacing:.02em;}
+    .sub{color:var(--dim); font-size:13.5px; margin:4px 0 26px; font-family:'Inter',sans-serif; letter-spacing:0;}
 
-/* panels */
-.panel{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:20px 22px; margin-bottom:18px;}
-.grid2{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
-@media (max-width:760px){.grid2{grid-template-columns:1fr;}}
-.label{font-size:11.5px; color:var(--dim); margin-bottom:6px; display:block; font-weight:500;}
-input[type=text], input[type=password], textarea{
-    width:100%; background:var(--panel2); border:1px solid var(--border); border-radius:7px;
-  color:var(--text); padding:10px 12px; font-family:'Inter',sans-serif; font-size:14px; outline:none;
-}
-input[type=number]{
-  width:90px; background:var(--panel2); border:1px solid var(--border); border-radius:7px;
-  color:var(--text); padding:8px 10px; font-family:'JetBrains Mono',monospace; font-size:14px; outline:none;
-}
-input:focus, textarea:focus{border-color:var(--mint);}
-textarea{min-height:96px; resize:vertical; line-height:1.5;}
-.hint{font-size:11.5px; color:var(--dim); margin-top:6px; font-family:'Inter',sans-serif;}
-.hint a{color:var(--mint);}
+    /* panels */
+    .panel{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:20px 22px; margin-bottom:18px;}
+    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+    @media (max-width:760px){.grid2{grid-template-columns:1fr;}}
+    .label{font-size:11.5px; color:var(--dim); margin-bottom:6px; display:block; font-weight:500;}
+    input[type=text], input[type=password], textarea{
+        width:100%; background:var(--panel2); border:1px solid var(--border); border-radius:7px;
+        color:var(--text); padding:10px 12px; font-family:'Inter',sans-serif; font-size:14px; outline:none;
+    }
+    input[type=number]{
+        width:90px; background:var(--panel2); border:1px solid var(--border); border-radius:7px;
+        color:var(--text); padding:8px 10px; font-family:'JetBrains Mono',monospace; font-size:14px; outline:none;
+    }
+    input:focus, textarea:focus{border-color:var(--mint);}
+    textarea{min-height:96px; resize:vertical; line-height:1.5;}
+    .hint{font-size:11.5px; color:var(--dim); margin-top:6px; font-family:'Inter',sans-serif;}
+    .hint a{color:var(--mint);}
 
-.row-inline{display:flex; gap:24px; flex-wrap:wrap; margin-top:16px;}
-.field-inline{display:flex; flex-direction:column; gap:6px;}
+    .row-inline{display:flex; gap:24px; flex-wrap:wrap; margin-top:16px;}
+    .field-inline{display:flex; flex-direction:column; gap:6px;}
 
-.btn{
-    background:var(--hot); color:#0B0E14; border:none; border-radius:7px; padding:12px 26px;
-  font-size:13.5px; font-weight:700; cursor:pointer; letter-spacing:.05em;
-}
-.btn:disabled{background:#3A3F4E; color:var(--dim); cursor:not-allowed;}
-.btn.secondary{background:transparent; border:1px solid var(--border); color:var(--dim); padding:10px 18px;}
-.actions{display:flex; align-items:center; gap:14px; margin-top:18px; flex-wrap:wrap;}
-.status{font-size:13px; color:var(--dim); font-family:'JetBrains Mono',monospace;}
-.status.err{color:var(--hot);}
-.auto-toggle{display:flex; align-items:center; gap:8px; color:var(--dim); font-size:13px; font-family:'Inter',sans-serif; cursor:pointer; user-select:none;}
-.auto-toggle input{accent-color:var(--hot); width:15px; height:15px; cursor:pointer;}
+    .btn{
+        background:var(--hot); color:#0B0E14; border:none; border-radius:7px; padding:12px 26px;
+        font-size:13.5px; font-weight:700; cursor:pointer; letter-spacing:.05em;
+    }
+    .btn:disabled{background:#3A3F4E; color:var(--dim); cursor:not-allowed;}.btn.secondary{background:transparent; border:1px solid var(--border); color:var(--dim); padding:10px 18px;}
+    .actions{display:flex; align-items:center; gap:14px; margin-top:18px; flex-wrap:wrap;}
+    .status{font-size:13px; color:var(--dim); font-family:'JetBrains Mono',monospace;}
+    .status.err{color:var(--hot);}
+    .auto-toggle{display:flex; align-items:center; gap:8px; color:var(--dim); font-size:13px; font-family:'Inter',sans-serif; cursor:pointer; user-select:none;}
+    .auto-toggle input{accent-color:var(--hot); width:15px; height:15px; cursor:pointer;}
 
-/* topic cards */
-.section-label{display:flex; align-items:center; justify-content:space-between; margin-top:22px; margin-bottom:2px;}
-.topic-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(250px,1fr)); gap:14px; margin-top:12px;}
-.topic-card{background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:14px;}
-.topic-card-head{display:flex; gap:8px; align-items:center; margin-bottom:8px;}
-.topic-name{flex:1; background:transparent; border:none; border-bottom:1px solid var(--border); color:var(--text);
-  font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.03em; font-size:13px; padding:4px 2px; outline:none;}
-.topic-name:focus{border-color:var(--mint);}
-.topic-remove{background:none; border:none; color:var(--dim); cursor:pointer; font-size:15px; padding:2px 6px; line-height:1;}
-.topic-remove:hover{color:var(--hot);}
-.topic-channels{width:100%; min-height:84px; background:var(--panel); border:1px solid var(--border); border-radius:6px;
-  color:var(--text); padding:8px; font-family:'Inter',sans-serif; font-size:12.5px; resize:vertical; outline:none;}
-.topic-channels:focus{border-color:var(--mint);}
-  .topic-scan-btn{width:100%; margin-top:8px; padding:8px 0; font-size:11.5px;}
-.add-topic-btn{background:transparent; border:1px dashed var(--border); color:var(--dim); border-radius:8px; padding:14px;
-  cursor:pointer; font-family:'Oswald',sans-serif; text-transform:uppercase; font-size:12px; letter-spacing:.04em;
-  display:flex; align-items:center; justify-content:center; min-height:70px; width:100%;}
-.add-topic-btn:hover{border-color:var(--mint); color:var(--mint);}
+    /* topic cards */
+    .section-label{display:flex; align-items:center; justify-content:space-between; margin-top:22px; margin-bottom:2px;}
+    .topic-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(250px,1fr)); gap:14px; margin-top:12px;}
+    .topic-card{background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:14px;}
+    .topic-card-head{display:flex; gap:8px; align-items:center; margin-bottom:8px;}
+    .topic-name{flex:1; background:transparent; border:none; border-bottom:1px solid var(--border); color:var(--text);
+                  font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.03em; font-size:13px; padding:4px 2px; outline:none;}
+    .topic-name:focus{border-color:var(--mint);}
+    .topic-remove{background:none; border:none; color:var(--dim); cursor:pointer; font-size:15px; padding:2px 6px; line-height:1;}
+    .topic-remove:hover{color:var(--hot);}
+    .topic-channels{width:100%; min-height:84px; background:var(--panel); border:1px solid var(--border); border-radius:6px;
+                      color:var(--text); padding:8px; font-family:'Inter',sans-serif; font-size:12.5px; resize:vertical; outline:none;}
+    .topic-channels:focus{border-color:var(--mint);}
+    .topic-scan-btn{width:100%; margin-top:8px; padding:8px 0; font-size:11.5px;}
+    .add-topic-btn{background:transparent; border:1px dashed var(--border); color:var(--dim); border-radius:8px; padding:14px;
+                     cursor:pointer; font-family:'Oswald',sans-serif; text-transform:uppercase; font-size:12px; letter-spacing:.04em;
+                     display:flex; align-items:center; justify-content:center; min-height:70px; width:100%;}
+    .add-topic-btn:hover{border-color:var(--mint); color:var(--mint);}
 
-/* keywords panel */
-.kw-title{font-size:13px; color:var(--dim); font-weight:500; margin-bottom:12px; font-family:'Inter',sans-serif;}
-.kw-list{display:flex; flex-wrap:wrap; gap:8px;}
-.kw-chip{
-    background:var(--mint-bg); border:1px solid rgba(79,209,197,0.35); color:var(--mint);
-  border-radius:20px; padding:6px 13px; font-size:13px; font-family:'JetBrains Mono',monospace;
-}
-.kw-chip b{color:var(--text); font-family:'Inter',sans-serif; font-weight:600;}
+    /* keywords panel */
+    .kw-title{font-size:13px; color:var(--dim); font-weight:500; margin-bottom:12px; font-family:'Inter',sans-serif;}
+    .kw-list{display:flex; flex-wrap:wrap; gap:8px;}
+    .kw-chip{
+        background:var(--mint-bg); border:1px solid rgba(79,209,197,0.35); color:var(--mint);
+        border-radius:20px; padding:6px 13px; font-size:13px; font-family:'JetBrains Mono',monospace;
+    }
+    .kw-chip b{color:var(--text); font-family:'Inter',sans-serif; font-weight:600;}
 
-/* sheet tabs */
-.tab-bar{display:flex; gap:6px; flex-wrap:wrap; margin:28px 0 0; border-bottom:1px solid var(--border);}
-.sheet-tab{background:var(--panel2); border:1px solid var(--border); border-bottom:none; color:var(--dim);
-  padding:10px 20px; border-radius:8px 8px 0 0; font-family:'Oswald',sans-serif; text-transform:uppercase;
-  font-size:12.5px; letter-spacing:.04em; cursor:pointer; position:relative; top:1px;}
-.sheet-tab.active{background:var(--panel); color:var(--text);}
-.sheet-tab:hover{color:var(--mint);}
-.topic-section-head{font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.03em; font-size:13px;
-  color:var(--mint); margin:26px 0 10px; padding-bottom:8px; border-bottom:1px dashed var(--border);
-  display:flex; align-items:center; gap:10px;}
+    /* sheet tabs */
+    .tab-bar{display:flex; gap:6px; flex-wrap:wrap; margin:28px 0 0; border-bottom:1px solid var(--border);}
+    .sheet-tab{background:var(--panel2); border:1px solid var(--border); border-bottom:none; color:var(--dim);  padding:10px 20px; border-radius:8px 8px 0 0; font-family:'Oswald',sans-serif; text-transform:uppercase;
+                 font-size:12.5px; letter-spacing:.04em; cursor:pointer; position:relative; top:1px;}
+    .sheet-tab.active{background:var(--panel); color:var(--text);}
+    .sheet-tab:hover{color:var(--mint);}
+    .topic-section-head{font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.03em; font-size:13px;
+                          color:var(--mint); margin:26px 0 10px; padding-bottom:8px; border-bottom:1px dashed var(--border);
+                          display:flex; align-items:center; gap:10px;}
 
-/* results */
-.section-title{font-size:15px; margin:20px 0 12px; font-weight:600; display:flex; align-items:center; gap:10px;}
-.channel-block{margin-bottom:14px;}
-  .channel-head{display:flex; align-items:center; gap:10px; padding:10px 4px; border-bottom:1px solid var(--border); margin-bottom:2px;}
-.ch-avatar{width:28px;height:28px;border-radius:50%; object-fit:cover;}
-.ch-name{font-weight:600; font-size:14.5px;}
-.ch-meta{color:var(--dim); font-size:12px; font-family:'JetBrains Mono',monospace; margin-left:auto;}
-.ch-ai-btn{padding:6px 12px; font-size:11.5px; margin-left:12px; white-space:nowrap;}
+    /* results */
+    .section-title{font-size:15px; margin:20px 0 12px; font-weight:600; display:flex; align-items:center; gap:10px;}
+    .channel-block{margin-bottom:14px;}
+    .channel-head{display:flex; align-items:center; gap:10px; padding:10px 4px; border-bottom:1px solid var(--border); margin-bottom:2px;}
+    .ch-avatar{width:28px;height:28px;border-radius:50%; object-fit:cover;}
+    .ch-name{font-weight:600; font-size:14.5px;}
+    .ch-meta{color:var(--dim); font-size:12px; font-family:'JetBrains Mono',monospace; margin-left:auto;}
+    .ch-ai-btn{padding:6px 12px; font-size:11.5px; margin-left:12px; white-space:nowrap;}
 
-table{width:100%; border-collapse:collapse; font-size:15px;}
-th{text-align:left; color:var(--dim); font-weight:500; font-size:12px; text-transform:uppercase; letter-spacing:.04em; padding:10px 10px; font-family:'Oswald',sans-serif; border-bottom:1px solid var(--border);}
-td{padding:16px 10px; border-bottom:1px solid rgba(36,43,61,0.6); vertical-align:middle;}
-tr:hover td{background:rgba(255,255,255,0.02);}
-.thumb{width:112px; height:63px; object-fit:cover; border-radius:6px; display:block;}
-  .thumb-dl-btn{display:block; width:112px; margin-top:4px; background:var(--panel2); border:1px solid var(--border); color:var(--dim); border-radius:4px; padding:3px 0; font-size:10.5px; cursor:pointer; text-align:center; font-family:'Inter',sans-serif;}
-  .thumb-dl-btn:hover{color:var(--mint); border-color:var(--mint);}
-  .thumb-dl-btn:disabled{opacity:0.6; cursor:wait;}
-.vtitle{color:var(--text); text-decoration:none; font-weight:500; font-size:15px;}
-.vtitle:hover{color:var(--mint);}
-.type-tag{font-size:11px; color:var(--dim); font-family:'JetBrains Mono',monospace; border:1px solid var(--border); border-radius:4px; padding:2px 7px; margin-left:7px;}
-.vph{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:16px;}
-.badge{display:inline-flex; align-items:center; gap:5px; background:var(--hot-bg); color:var(--hot); font-size:11px; font-weight:700; padding:4px 9px; border-radius:5px; letter-spacing:.03em;}
-.dim-cell{color:var(--dim); font-family:'JetBrains Mono',monospace; font-size:13.5px;}
+    table{width:100%; border-collapse:collapse; font-size:15px;}
+    th{text-align:left; color:var(--dim); font-weight:500; font-size:12px; text-transform:uppercase; letter-spacing:.04em; padding:10px 10px; font-family:'Oswald',sans-serif; border-bottom:1px solid var(--border);}
+    td{padding:16px 10px; border-bottom:1px solid rgba(36,43,61,0.6); vertical-align:middle;}
+    tr:hover td{background:rgba(255,255,255,0.02);}
+    .thumb{width:112px; height:63px; object-fit:cover; border-radius:6px; display:block;}
+    .thumb-dl-btn{display:block; width:112px; margin-top:4px; background:var(--panel2); border:1px solid var(--border); color:var(--dim); border-radius:4px; padding:3px 0; font-size:10.5px; cursor:pointer; text-align:center; font-family:'Inter',sans-serif;}
+    .thumb-dl-btn:hover{color:var(--mint); border-color:var(--mint);}
+    .thumb-dl-btn:disabled{opacity:0.6; cursor:wait;}
+    .vtitle{color:var(--text); text-decoration:none; font-weight:500; font-size:15px;}
+    .vtitle:hover{color:var(--mint);}
+    .type-tag{font-size:11px; color:var(--dim); font-family:'JetBrains Mono',monospace; border:1px solid var(--border); border-radius:4px; padding:2px 7px; margin-left:7px;}
+    .region-badge{display:inline-flex; align-items:center; gap:3px; background:rgba(255,193,7,0.12); color:#ffc107; font-size:10.5px; font-weight:600; padding:2px 7px; border-radius:4px; margin-left:6px; cursor:help;}
+    .vph{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:16px;}
+    .badge{display:inline-flex; align-items:center; gap:5px; background:var(--hot-bg); color:var(--hot); font-size:11px; font-weight:700; padding:4px 9px; border-radius:5px; letter-spacing:.03em;}
+    .dim-cell{color:var(--dim); font-family:'JetBrains Mono',monospace; font-size:13.5px;}
+    .empty{color:var(--dim); font-size:13.5px; padding:30px 0; text-align:center; font-family:'Inter',sans-serif;}
 
-.empty{color:var(--dim); font-size:13.5px; padding:30px 0; text-align:center; font-family:'Inter',sans-serif;}
-
-/* AI panel */
-.ai-result{margin-top:16px; padding-top:16px; border-top:1px solid var(--border); line-height:1.75; font-size:14.5px; color:var(--text); font-family:'Inter',sans-serif;}
-.ai-result strong{color:var(--mint); font-weight:600;}
-/* password gate */
-.gate-overlay{position:fixed; inset:0; background:rgba(11,14,20,0.97); z-index:1000; display:flex; align-items:center; justify-content:center;}
-.gate-box{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:32px; max-width:340px; width:90%; text-align:center;}
-.gate-box h2{font-size:16px; margin:0 0 6px;}
-.gate-box p{color:var(--dim); font-size:12.5px; font-family:'Inter',sans-serif; margin:0 0 18px;}
-.gate-box input{margin-bottom:12px; text-align:center;}
-.gate-box .btn{width:100%;}
-.gate-err{color:var(--hot); font-size:12.5px; font-family:'Inter',sans-serif; margin-top:10px; min-height:16px;}
-</style>
+    /* AI panel */
+    .ai-result{margin-top:16px; padding-top:16px; border-top:1px solid var(--border); line-height:1.75; font-size:14.5px; color:var(--text); font-family:'Inter',sans-serif;}
+    .ai-result strong{color:var(--mint); font-weight:600;}
+    /* password gate */
+    .gate-overlay{position:fixed; inset:0; background:rgba(11,14,20,0.97); z-index:1000; display:flex; align-items:center; justify-content:center;}
+    .gate-box{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:32px; max-width:340px; width:90%; text-align:center;}
+    .gate-box h2{font-size:16px; margin:0 0 6px;}
+    .gate-box p{color:var(--dim); font-size:12.5px; font-family:'Inter',sans-serif; margin:0 0 18px;}
+    .gate-box input{margin-bottom:12px; text-align:center;}
+    .gate-box .btn{width:100%;}
+    .gate-err{color:var(--hot); font-size:12.5px; font-family:'Inter',sans-serif; margin-top:10px; min-height:16px;}
+    </style>
   </head>
   <body>
-  <div class="wrap">
+    <div class="wrap">
 
-      <div class="gate-overlay" id="gateOverlay" style="display:none;">
-            <div class="gate-box">
-                    <h2>🔒 CHECK THỊ TRƯỜNG</h2>
-                  <p>Nhập mật khẩu chung của nhóm để tiếp tục.</p>
-                  <input type="password" id="gatePassword" placeholder="Mật khẩu">
-                  <button class="btn" onclick="submitGatePassword()">Vào tool</button>
-                  <div class="gate-err" id="gateErr"></div>
-            </div>
+        <div class="gate-overlay" id="gateOverlay" style="display:none;">
+              <div class="gate-box">
+                      <h2>🔒 CHECK THỊ TRƯỜNG</h2>
+                    <p>Nhập mật khẩu chung của nhóm để tiếp tục.</p>
+                    <input type="password" id="gatePassword" placeholder="Mật khẩu">
+                    <button class="btn" onclick="submitGatePassword()">Vào tool</button>
+                    <div class="gate-err" id="gateErr"></div>
+              </div>
+        </div>
+    
+      <div class="header"><img class="brand-logo" src="pam-media-logo.png" alt="PAM Media"><div class="dot"></div><h1>Check thị trường</h1></div>
+      <div class="sub">Quét nhiều chủ đề cùng lúc · mỗi chủ đề 1 sheet riêng · tính VPH · lọc video đang lên · phân tích AI theo từng chủ đề</div>
+    
+      <div class="panel">
+          <div class="hint" style="margin:0 0 16px; font-size:12.5px;">🔒 Kết nối qua backend chung của nhóm — API key do quản trị viên quản lý, nhân sự không cần và không thể nhập/xem key.</div>
+      
+          <div class="section-label" style="margin-top:0;">
+                <span class="label" style="margin:0;">Chủ đề & kênh đối thủ (mỗi chủ đề 1 thẻ, mỗi dòng kênh 1 kênh)</span>
+          </div>
+          <div class="topic-grid" id="topicContainer">
+                <div class="topic-card" data-id="topic_1">
+                        <div class="topic-card-head">
+                                  <input type="text" class="topic-name" value="" placeholder="Tên chủ đề (vd: Khỉ)">
+                                  <button class="topic-remove" onclick="removeTopicBlock('topic_1')" title="Xoá chủ đề">✕</button>
+                        </div>
+                        <textarea class="topic-channels" placeholder="https://youtube.com/@tenkenh
+                          @tenkenh2
+                          UCxxxxxxxxxxxxxxxxxxxxxx"></textarea>
+                        <button class="btn secondary topic-scan-btn" onclick="runScanTopic('topic_1', this)">Quét chủ đề này</button>
+                </div>
+                <button class="add-topic-btn" onclick="addTopicBlock()">+ Thêm chủ đề</button>
+          </div>
+      
+          <div class="row-inline">
+                <div class="field-inline">
+                        <span class="label">Số video tối đa / kênh</span>        <input type="number" id="numVideos" value="30" min="5" max="300">
+                </div>
+                <div class="field-inline">
+                        <span class="label">Chỉ xét video trong (ngày)</span>
+                        <input type="number" id="numDays" value="14" min="1" max="3650">
+                        <label style="display:flex; align-items:center; gap:6px; margin-top:6px; font-size:11.5px; color:var(--dim); cursor:pointer; font-family:'Inter',sans-serif;">
+                                  <input type="checkbox" id="allTime" onchange="toggleAllTime()" style="accent-color:var(--hot); width:13px; height:13px; cursor:pointer;">
+                                  Toàn thời gian
+                        </label>
+                        <label style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:11.5px; color:var(--dim); cursor:pointer; font-family:'Inter',sans-serif;">
+                                  <input type="checkbox" id="unlimitedPages" onchange="saveConfig()" style="accent-color:var(--hot); width:13px; height:13px; cursor:pointer;">
+                                  Bỏ giới hạn 500 video/kênh (kênh cực nhiều video, tốn quota hơn)
+                        </label>
+                </div>
+                <div class="field-inline">
+                        <span class="label">Ngưỡng "đang lên" (x lần trung bình)</span>
+                        <input type="number" id="threshold" value="1.5" min="1" max="10" step="0.1">
+                </div>
+          </div>
+          <div class="hint" style="margin-top:8px;">Tool tự lấy đủ video trong đúng số ngày đã chọn (tự phân trang) — số "video tối đa" chỉ là giới hạn an toàn, không phải số video cố định phải lấy.</div>
+      
+          <div class="actions">
+                <button class="btn" id="runBtn" onclick="runScan()">Quét tất cả chủ đề</button>
+                <button class="btn secondary" onclick="resetAll()">Xoá kết quả</button>
+                <label class="auto-toggle">
+                        <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()">
+                        Tự động cập nhật mỗi 5 phút
+                </label>
+                <span class="status" id="statusText"></span>
+          </div>
+          <div class="hint" style="margin-top:10px;">Tự động cập nhật chỉ chạy khi tab này còn mở trên trình duyệt.</div>
       </div>
+    
+    
+      <div class="panel" id="aiPanel">
+          <div id="aiAllNotice" class="hint" style="display:none; font-size:13px;">Các chủ đề khác nhau (khỉ, kids, robo...) không có đặc điểm nội dung chung để so sánh, nên AI không phân tích gộp ở tab "Tất cả". Chọn 1 sheet chủ đề cụ thể ở tab bên dưới để dùng tính năng này.</div>
+          <div id="aiControls">
+                <div style="max-width:320px;">
+                        <span class="label">Model</span>
+                        <input type="text" id="geminiModel" value="gemini-3.5-flash">
+                        <div class="hint">Đổi tên model nếu cần bản khác (vd: gemini-3.6-flash). Key AI dùng chung qua backend, không cần nhập.</div>
+                </div>
+                <div class="actions">
+                        <button class="btn" id="aiBtn" onclick="analyzeWithGemini()">Phân tích đặc điểm chung bằng AI</button>
+                        <span class="status" id="aiStatus">Quét trước, chọn 1 sheet chủ đề, rồi bấm để AI phân tích.</span>
+                </div>
+                <div id="aiOutput"></div>
+          </div>
+      </div>
+    
+      <div class="panel" style="padding:14px 22px;">    <span class="label" style="margin-bottom:4px;">Tìm theo từ khoá (tên kênh hoặc tiêu đề video)</span>
+          <input type="text" id="keywordFilter" placeholder="Nhập từ khoá rồi lọc trực tiếp trong kết quả..." oninput="applyKeywordFilter()">
+      </div>
+    
+      <div class="tab-bar" id="tabBar"></div>
+      <div id="resultsContent"></div>
+    
+    </div>
   
-    <div class="header"><img class="brand-logo" src="pam-media-logo.png" alt="PAM Media"><div class="dot"></div><h1>Check thị trường</h1></div>
-    <div class="sub">Quét nhiều chủ đề cùng lúc · mỗi chủ đề 1 sheet riêng · tính VPH · lọc video đang lên · phân tích AI theo từng chủ đề</div>
+  <script>
+    const STOPWORDS = new Set(("và của là có cho khi để trong với các một những này đó bị được sẽ đã đang rất nhiều ít cũng thì mà như nên vì nếu nhưng hay hoặc tại từ đến về ra vào lên xuống trên dưới sau trước giữa mỗi mọi ai gì sao nào bao nhiêu làm chỉ còn vẫn đâu ơi ạ nhé nha đi lại mới luôn quá thật sự việc người ngày năm tháng tuần giờ phút giây không chưa phải cần muốn thấy biết nói xem video kênh tập phần full trọn bộ tại the a an of to and in on is are").split(" "));
 
-  <div class="panel">
-    <div class="hint" style="margin:0 0 16px; font-size:12.5px;">🔒 Kết nối qua backend chung của nhóm — API key do quản trị viên quản lý, nhân sự không cần và không thể nhập/xem key.</div>
+    // URL Worker Cloudflare (YouTube proxy)
+    const PROXY_BASE = 'https://pam-scan-proxy.ducphuc20703.workers.dev';
+    // URL Vercel (Gemini proxy)
+    const GEMINI_PROXY_BASE = 'https://pam-gemini-proxy.vercel.app';
 
-      <div class="section-label" style="margin-top:0;">
-        <span class="label" style="margin:0;">Chủ đề & kênh đối thủ (mỗi chủ đề 1 thẻ, mỗi dòng kênh 1 kênh)</span>
-      </div>
-      <div class="topic-grid" id="topicContainer">
-        <div class="topic-card" data-id="topic_1">
-          <div class="topic-card-head">
-            <input type="text" class="topic-name" value="" placeholder="Tên chủ đề (vd: Khỉ)">
-            <button class="topic-remove" onclick="removeTopicBlock('topic_1')" title="Xoá chủ đề">✕</button>
-          </div>
-          <textarea class="topic-channels" placeholder="https://youtube.com/@tenkenh
-  @tenkenh2
-  UCxxxxxxxxxxxxxxxxxxxxxx"></textarea>
-                  <button class="btn secondary topic-scan-btn" onclick="runScanTopic('topic_1', this)">Quét chủ đề này</button>
-        </div>
-        <button class="add-topic-btn" onclick="addTopicBlock()">+ Thêm chủ đề</button>
-    </div>
+    let TOPICS = [];
+    let TEAM_PASSWORD = localStorage.getItem('teamPassword') || '';
 
-    <div class="row-inline">
-        <div class="field-inline">
-        <span class="label">Số video tối đa / kênh</span>
-                  <input type="number" id="numVideos" value="30" min="5" max="300">
-        </div>
-        <div class="field-inline">
-          <span class="label">Chỉ xét video trong (ngày)</span>
-                  <input type="number" id="numDays" value="14" min="1" max="3650">
-                  <label style="display:flex; align-items:center; gap:6px; margin-top:6px; font-size:11.5px; color:var(--dim); cursor:pointer; font-family:'Inter',sans-serif;">
-                              <input type="checkbox" id="allTime" onchange="toggleAllTime()" style="accent-color:var(--hot); width:13px; height:13px; cursor:pointer;">
-                              Toàn thời gian
-                  </label>
-              </div>
-              <div class="field-inline">
-                <span class="label">Ngưỡng "đang lên" (x lần trung bình)</span>
-                <input type="number" id="threshold" value="1.5" min="1" max="10" step="0.1">
-              </div>
-            </div>
+    function showGate(errMsg){
+        document.getElementById('gateOverlay').style.display = 'flex';
+        document.getElementById('gateErr').textContent = errMsg || '';
+        document.getElementById('gatePassword').focus();
+    }
+    function hideGate(){
+        document.getElementById('gateOverlay').style.display = 'none';
+    }
+    function submitGatePassword(){
+        const val = document.getElementById('gatePassword').value.trim();
+        if(!val){ document.getElementById('gateErr').textContent = 'Nhập mật khẩu.'; return; }
+        TEAM_PASSWORD = val;
+        localStorage.setItem('teamPassword', val);
+        hideGate();
+    }
+    function handleAuthError(){
+        TEAM_PASSWORD = '';
+        localStorage.removeItem('teamPassword');
+        showGate('Sai mật khẩu, vui lòng nhập lại.');
+    }
+    let activeTab = null;
+    let autoTimer = null;
+    let topicCounter = 1;
 
-                <div class="hint" style="margin-top:8px;">Tool tự lấy đủ video trong đúng số ngày đã chọn (tự phân trang) — số "video tối đa" chỉ là giới hạn an toàn, không phải số video cố định phải lấy.</div>
-    <div class="actions">
-              <button class="btn" id="runBtn" onclick="runScan()">Quét tất cả chủ đề</button>
-              <button class="btn secondary" onclick="resetAll()">Xoá kết quả</button>
-              <label class="auto-toggle">
-                <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()">
-                Tự động cập nhật mỗi 5 phút
-      </label>
-              <span class="status" id="statusText"></span>
-            </div>
-            <div class="hint" style="margin-top:10px;">Tự động cập nhật chỉ chạy khi tab này còn mở trên trình duyệt.</div>
-          </div>
+    function log(msg, isErr){
+        const el = document.getElementById('statusText');
+        el.textContent = msg;
+        el.className = 'status' + (isErr ? ' err' : '');
+    }
+
+    function collectFullTopicsForSave(){
+        return Array.from(document.querySelectorAll('.topic-card')).map(card => ({
+              name: card.querySelector('.topic-name').value,
+              channelsText: card.querySelector('.topic-channels').value
+        }));
+    }
+
+    function saveConfig(){
+        try{
+              const cfg = {
+                      topics: collectFullTopicsForSave(),
+                      numVideos: document.getElementById('numVideos').value,
+                      numDays: document.getElementById('numDays').value,
+                      threshold: document.getElementById('threshold').value,
+                      allTime: document.getElementById('allTime').checked,
+                      unlimitedPages: document.getElementById('unlimitedPages').checked
+              };
+              localStorage.setItem('scanToolConfig', JSON.stringify(cfg));  }catch(e){ }
+    }
+
+    function toggleAllTime(){
+        document.getElementById('numDays').disabled = document.getElementById('allTime').checked;
+        saveConfig();
+    }
+
+    function loadConfig(){
+        let cfg;
+        try{
+              const raw = localStorage.getItem('scanToolConfig');
+              if(!raw) return;
+              cfg = JSON.parse(raw);
+        }catch(e){ return; }
+        if(!cfg) return;
+
+        if(cfg.topics && cfg.topics.length){
+              document.querySelectorAll('.topic-card').forEach(el => el.remove());
+              cfg.topics.forEach(t => addTopicBlock(t.name, t.channelsText));
+        }
+        if(cfg.numVideos) document.getElementById('numVideos').value = cfg.numVideos;
+        if(cfg.numDays) document.getElementById('numDays').value = cfg.numDays;
+        if(cfg.threshold) document.getElementById('threshold').value = cfg.threshold;
+        if(cfg.allTime){
+              document.getElementById('allTime').checked = true;
+              document.getElementById('numDays').disabled = true;
+        }
+        if(cfg.unlimitedPages) document.getElementById('unlimitedPages').checked = true;
+    }
 
 
-          <div class="panel" id="aiPanel">
-            <div id="aiAllNotice" class="hint" style="display:none; font-size:13px;">Các chủ đề khác nhau (khỉ, kids, robo...) không có đặc điểm nội dung chung để so sánh, nên AI không phân tích gộp ở tab "Tất cả". Chọn 1 sheet chủ đề cụ thể ở tab bên dưới để dùng tính năng này.</div>
-            <div id="aiControls">
-              <div style="max-width:320px;">
-                <span class="label">Model</span>
-                <input type="text" id="geminiModel" value="gemini-3.5-flash">
-                <div class="hint">Đổi tên model nếu cần bản khác (vd: gemini-3.6-flash). Key AI dùng chung qua backend, không cần nhập.</div>
-              </div>
-              <div class="actions">
-                <button class="btn" id="aiBtn" onclick="analyzeWithGemini()">Phân tích đặc điểm chung bằng AI</button>
-                <span class="status" id="aiStatus">Quét trước, chọn 1 sheet chủ đề, rồi bấm để AI phân tích.</span>
-      </div>
-      <div id="aiOutput"></div>
-    </div>
-  </div>
+    function addTopicBlock(name, channelsText){
+        topicCounter++;
+        const id = 'topic_' + topicCounter;
+        const div = document.createElement('div');
+        div.className = 'topic-card';
+        div.dataset.id = id;
+        div.innerHTML = `
+            <div class="topic-card-head">
+                  <input type="text" class="topic-name" value="${name ? name.replace(/"/g,'&quot;') : ''}" placeholder="Tên chủ đề (vd: Kids)">
+                        <button class="topic-remove" onclick="removeTopicBlock('${id}')" title="Xoá chủ đề">✕</button>
+                            </div>
+                                <textarea class="topic-channels" placeholder="https://youtube.com/@tenkenh
+                                @tenkenh2
+                                UCxxxxxxxxxxxxxxxxxxxxxx">${channelsText || ''}</textarea>
+                                    <button class="btn secondary topic-scan-btn" onclick="runScanTopic('${id}', this)">Quét chủ đề này</button>
+                                      `;
+        document.getElementById('topicContainer').insertBefore(div, document.querySelector('.add-topic-btn'));
+        saveConfig();
+    }
 
-  <div class="tab-bar" id="tabBar"></div>
-          <div id="resultsContent"></div>
+    function removeTopicBlock(id){
+        const container = document.getElementById('topicContainer');
+        const cards = container.querySelectorAll('.topic-card');
+        if(cards.length <= 1) return;
+        const el = container.querySelector(`[data-id="${id}"]`);
+        if(el) el.remove();
+        saveConfig();
+    }
 
-        </div>
+    function collectTopicsInput(){
+        return Array.from(document.querySelectorAll('.topic-card')).map(card => ({
+              id: card.dataset.id,
+              name: card.querySelector('.topic-name').value.trim() || 'Chủ đề',
+              lines: card.querySelector('.topic-channels').value.split('\n').map(l => l.trim()).filter(Boolean)
+        })).filter(t => t.lines.length);
+    }
 
-        <script>
-        const STOPWORDS = new Set(("và của là có cho khi để trong với các một những này đó bị được sẽ đã đang rất nhiều ít cũng thì mà như nên vì nếu nhưng hay hoặc tại từ đến về ra vào lên xuống trên dưới sau trước giữa mỗi mọi ai gì sao nào bao nhiêu làm chỉ còn vẫn đâu ơi ạ nhé nha đi lại mới luôn quá thật sự việc người ngày năm tháng tuần giờ phút giây không chưa phải cần muốn thấy biết nói xem video kênh tập phần full trọn bộ tại the a an of to and in on is are").split(" "));
+    function resetAll(){
+        TOPICS = [];
+        activeTab = null;
+        document.getElementById('tabBar').innerHTML = '';
+        document.getElementById('resultsContent').innerHTML = '';
+        document.getElementById('aiOutput').innerHTML = '';
+        document.getElementById('aiAllNotice').style.display = 'none';
+        document.getElementById('aiControls').style.display = 'block';  document.getElementById('autoRefresh').checked = false;
+        toggleAutoRefresh();
+        log('');
+    }
 
-// ⚠️ URL Worker Cloudflare (YouTube proxy) — đã deploy, giữ nguyên.
-const PROXY_BASE = 'https://pam-scan-proxy.ducphuc20703.workers.dev';
-// ⚠️ Sửa dòng này thành URL Vercel của bạn sau khi deploy xong (Gemini proxy).
-const GEMINI_PROXY_BASE = 'https://pam-gemini-proxy.vercel.app';
+    function toggleAutoRefresh(){
+        const on = document.getElementById('autoRefresh').checked;
+        if(autoTimer){ clearInterval(autoTimer); autoTimer = null; }
+        if(on){
+              autoTimer = setInterval(() => {
+                      if(!document.getElementById('runBtn').disabled) runScan();
+              }, 5 * 60 * 1000);
+        }
+    }
 
-let TOPICS = [];       // [{id, name, results:[{channel, videos}]}]
-          let TEAM_PASSWORD = localStorage.getItem('teamPassword') || '';
+    function parseChannelLine(line){
+        line = line.trim();
+        if(!line) return null;
+        let m = line.match(/channel\/(UC[\w-]{20,})/);
+        if(m) return {type:'id', value:m[1]};
+        m = line.match(/@([\w.\-]+)/);
+        if(m) return {type:'handle', value:m[1]};
+        if(/^UC[\w-]{20,}$/.test(line)) return {type:'id', value:line};
+        if(line.startsWith('@')) return {type:'handle', value:line.slice(1)};
+        m = line.match(/\/(?:c|user)\/([\w.\-]+)/);
+        if(m) return {type:'handle', value:m[1]};
+        return {type:'handle', value:line};
+    }
 
-          function showGate(errMsg){
-              document.getElementById('gateOverlay').style.display = 'flex';
-              document.getElementById('gateErr').textContent = errMsg || '';
-              document.getElementById('gatePassword').focus();
-          }
-          function hideGate(){
-              document.getElementById('gateOverlay').style.display = 'none';
-          }
-          function submitGatePassword(){
-              const val = document.getElementById('gatePassword').value.trim();
-              if(!val){ document.getElementById('gateErr').textContent = 'Nhập mật khẩu.'; return; }
-              TEAM_PASSWORD = val;
-              localStorage.setItem('teamPassword', val);
-              hideGate();
-          }
-          function handleAuthError(){
-              TEAM_PASSWORD = '';
-              localStorage.removeItem('teamPassword');
-              showGate('Sai mật khẩu, vui lòng nhập lại.');
-          }
-          
-let activeTab = null;  // 'ALL' or topic id
-let autoTimer = null;
-let topicCounter = 1;
+    async function apiGet(path, params){
+        const url = new URL(PROXY_BASE + '/youtube/' + path);
+        Object.entries(params).forEach(([k,v]) => url.searchParams.set(k,v));
+        const res = await fetch(url.toString(), { headers: { 'X-Team-Password': TEAM_PASSWORD } });
+        if(res.status === 401){ handleAuthError(); throw new Error('Sai mật khẩu truy cập.'); }
+        const data = await res.json();
+        if(!res.ok){
+              const msg = data && data.error ? data.error.message : ('Lỗi HTTP ' + res.status);
+              throw new Error(msg);
+        }
+        return data;
+    }
 
-function log(msg, isErr){
-    const el = document.getElementById('statusText');
-  el.textContent = msg;
-  el.className = 'status' + (isErr ? ' err' : '');
-}
+    async function resolveChannel(parsed){
+        let data;
+        if(parsed.type === 'id'){
+              data = await apiGet('channels', {part:'snippet,contentDetails', id: parsed.value});
+        } else {
+              data = await apiGet('channels', {part:'snippet,contentDetails', forHandle: parsed.value});
+              if(!data.items || !data.items.length){
+                      const s = await apiGet('search', {part:'snippet', type:'channel', q: parsed.value, maxResults:1});
+                      if(s.items && s.items.length){
+                                const cid = s.items[0].snippet.channelId || s.items[0].id.channelId;
+                                data = await apiGet('channels', {part:'snippet,contentDetails', id: cid});
+                      }
+              }
+        }
+        if(!data.items || !data.items.length) throw new Error('Không tìm thấy kênh');
+        const it = data.items[0];
+        return {
+              id: it.id,
+              title: it.snippet.title,
+              avatar: it.snippet.thumbnails && it.snippet.thumbnails.default ? it.snippet.thumbnails.default.url : '',
+              uploadsPlaylist: it.contentDetails.relatedPlaylists.uploads
+        };
+    }
 
-function collectFullTopicsForSave(){
-    return Array.from(document.querySelectorAll('.topic-card')).map(card => ({
-          name: card.querySelector('.topic-name').value,
-          channelsText: card.querySelector('.topic-channels').value
-      }));
-}
+    async function fetchRecentVideoIds(playlistId, maxResults, cutoff, maxPages){
+        let ids = [];
+        let pageToken = '';
+        maxPages = maxPages || 10;
+        for(let page = 0; page < maxPages; page++){
+              const params = {part:'contentDetails', playlistId, maxResults:50};    if(pageToken) params.pageToken = pageToken;
+              const data = await apiGet('playlistItems', params);
+              const items = data.items || [];
+              if(!items.length) break;
 
-function saveConfig(){
-    try{
-          const cfg = {
-                  topics: collectFullTopicsForSave(),
-                  numVideos: document.getElementById('numVideos').value,
-                  numDays: document.getElementById('numDays').value,
-                  threshold: document.getElementById('threshold').value,
-                  allTime: document.getElementById('allTime').checked
-          };
-          localStorage.setItem('scanToolConfig', JSON.stringify(cfg));
-    }catch(e){ /* trình duyệt chặn localStorage (chế độ ẩn danh...) -> bỏ qua, không ảnh hưởng chức năng chính */ }
-}
+              let hitCutoff = false;
+              for(const it of items){
+                      ids.push(it.contentDetails.videoId);
+                      const publishedAt = new Date(it.contentDetails.videoPublishedAt || 0).getTime();
+                      if(cutoff && publishedAt && publishedAt < cutoff){ hitCutoff = true; break; }
+              }
+              if(hitCutoff) break;
+              if(ids.length >= maxResults) break;
+              if(!data.nextPageToken) break;
+              pageToken = data.nextPageToken;
+        }
+        return ids.slice(0, maxResults);
+    }
 
-          function toggleAllTime(){
-              document.getElementById('numDays').disabled = document.getElementById('allTime').checked;
-              saveConfig();
-          }
+    function parseDuration(iso){
+        const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+        if(!m) return 0;
+        const h = parseInt(m[1]||0), mi = parseInt(m[2]||0), s = parseInt(m[3]||0);
+        return h*3600 + mi*60 + s;
+    }
 
-          function loadConfig(){
-              let cfg;
+    async function fetchVideoDetails(ids){
+        if(!ids.length) return [];
+        const chunks = [];
+        for(let i = 0; i < ids.length; i += 50) chunks.push(ids.slice(i, i + 50));
+        const responses = await Promise.all(chunks.map(chunk =>
+              apiGet('videos', {part:'snippet,statistics,contentDetails', id: chunk.join(',')})
+                                                         ));
+        const allItems = responses.flatMap(data => data.items || []);
+        const now = Date.now();
+        return allItems.map(it => {
+              const publishedAt = new Date(it.snippet.publishedAt).getTime();
+              const hours = Math.max((now - publishedAt) / 3600000, 0.1);
+              const views = parseInt(it.statistics.viewCount || 0);
+              const likes = it.statistics.likeCount !== undefined ? parseInt(it.statistics.likeCount) : null;
+              const comments = it.statistics.commentCount !== undefined ? parseInt(it.statistics.commentCount) : null;
+              const durSec = parseDuration(it.contentDetails.duration || 'PT0S');
+              const rr = it.contentDetails.regionRestriction;
+              let region = null;
+              if(rr && rr.blocked && rr.blocked.length) region = {type:'blocked', countries: rr.blocked};
+              else if(rr && rr.allowed && rr.allowed.length) region = {type:'allowed', countries: rr.allowed};
+              return {
+                      id: it.id,
+                      title: it.snippet.title,
+                      thumb: it.snippet.thumbnails.medium ? it.snippet.thumbnails.medium.url : it.snippet.thumbnails.default.url,
+                      publishedAt,
+                      views,
+                      likes,
+                      comments,
+                      hours,
+                      vph: views / hours,
+                      isShort: durSec > 0 && durSec <= 180,
+                      region
+              };
+        });
+    }
+
+    function extractKeywords(title){
+        const clean = title.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, ' ');
+        return clean.split(/\s+/).filter(w => w.length > 1 && !STOPWORDS.has(w) && !/^\d+$/.test(w));
+    }
+
+    async function runWithConcurrency(items, limit, worker){
+        const results = new Array(items.length);
+        let nextIndex = 0;
+        async function runNext(){
+              while(nextIndex < items.length){
+                      const i = nextIndex++;      results[i] = await worker(items[i]);
+              }
+        }
+        const runners = Array.from({length: Math.min(limit, items.length)}, runNext);
+        await Promise.all(runners);
+        return results;
+    }
+
+    async function scanOneTopic(topic, numVideos, threshold, cutoff, maxPages, onProgress){
+        let done = 0;
+        const rawResults = await runWithConcurrency(topic.lines, 6, async (raw) => {
               try{
-                    const raw = localStorage.getItem('scanToolConfig');
-                    if(!raw) return;
-                    cfg = JSON.parse(raw);
-              }catch(e){ return; }
-              if(!cfg) return;
+                      const parsed = parseChannelLine(raw);
+                      const ch = await resolveChannel(parsed);
+                      const ids = await fetchRecentVideoIds(ch.uploadsPlaylist, numVideos, cutoff, maxPages);
+                      let videos = await fetchVideoDetails(ids);
+                      videos = videos.filter(v => v.publishedAt >= cutoff);
 
-              if(cfg.topics && cfg.topics.length){
-                    document.querySelectorAll('.topic-card').forEach(el => el.remove());
-                    cfg.topics.forEach(t => addTopicBlock(t.name, t.channelsText));
+                      const shorts = videos.filter(v => v.isShort);
+                      const longs = videos.filter(v => !v.isShort);
+                      const avg = arr => arr.length ? arr.reduce((s,v)=>s+v.vph,0)/arr.length : 0;
+                      const avgShort = avg(shorts), avgLong = avg(longs);
+
+                      videos.forEach(v => {
+                                const base = v.isShort ? avgShort : avgLong;
+                                v.hot = base > 0 && v.vph >= base * threshold;
+                                v.channelTitle = ch.title;
+                                v.topicName = topic.name;
+                      });
+                      videos.sort((a,b) => b.vph - a.vph);
+
+                      done++;
+                      if(onProgress) onProgress(done, raw);
+                      return {channel: ch, videos};
+              }catch(e){
+                      done++;
+                      if(onProgress) onProgress(done, raw);
+                      return {channel:{title: raw, error: e.message}, videos:[]};
               }
-              if(cfg.numVideos) document.getElementById('numVideos').value = cfg.numVideos;
-              if(cfg.numDays) document.getElementById('numDays').value = cfg.numDays;
-              if(cfg.threshold) document.getElementById('threshold').value = cfg.threshold;
-              if(cfg.allTime){
-                    document.getElementById('allTime').checked = true;
-                    document.getElementById('numDays').disabled = true;
+        });
+
+        const seenIds = new Set();
+        const topicResults = [];
+        let duplicatesRemoved = 0;
+        for(const r of rawResults){
+              if(r.channel && r.channel.id){
+                      if(seenIds.has(r.channel.id)){ duplicatesRemoved++; continue; }
+                      seenIds.add(r.channel.id);
               }
-          }
+              topicResults.push(r);
+        }
 
-function addTopicBlock(name, channelsText){
-    topicCounter++;
-  const id = 'topic_' + topicCounter;
-  const div = document.createElement('div');
-  div.className = 'topic-card';
-  div.dataset.id = id;
-  div.innerHTML = `
-        <div class="topic-card-head">
-          <input type="text" class="topic-name" value="${name ? name.replace(/"/g,'&quot;') : ''}" placeholder="Tên chủ đề (vd: Kids)">
-          <button class="topic-remove" onclick="removeTopicBlock('${id}')" title="Xoá chủ đề">✕</button>
-        </div>
-        <textarea class="topic-channels" placeholder="https://youtube.com/@tenkenh
-    @tenkenh2
-    UCxxxxxxxxxxxxxxxxxxxxxx">${channelsText || ''}</textarea>
-        <button class="btn secondary topic-scan-btn" onclick="runScanTopic('${id}', this)">Quét chủ đề này</button>
-      `;
-  document.getElementById('topicContainer').insertBefore(div, document.querySelector('.add-topic-btn'));
-  saveConfig();
-}
+        return {id: topic.id, name: topic.name, results: topicResults, duplicatesRemoved};
+    }
 
-function removeTopicBlock(id){
-    const container = document.getElementById('topicContainer');
-  const cards = container.querySelectorAll('.topic-card');
-  if(cards.length <= 1) return;
-  const el = container.querySelector(`[data-id="${id}"]`);
-  if(el) el.remove();
-  saveConfig();
-}
+    async function runScan(){
+        const topicsInput = collectTopicsInput();
+        const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
+        const numDays = parseInt(document.getElementById('numDays').value) || 14;
+        const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
+        const allTime = document.getElementById('allTime').checked;
+        const maxPages = document.getElementById('unlimitedPages').checked ? 1000 : 10;
 
-function collectTopicsInput(){
-    return Array.from(document.querySelectorAll('.topic-card')).map(card => ({
-          id: card.dataset.id,
-          name: card.querySelector('.topic-name').value.trim() || 'Chủ đề',
-          lines: card.querySelector('.topic-channels').value.split('\n').map(l => l.trim()).filter(Boolean)
-      })).filter(t => t.lines.length);
-}
+        if(!topicsInput.length){ log('Chưa nhập kênh nào.', true); return; }
 
-function resetAll(){
-    TOPICS = [];
-  activeTab = null;
-  document.getElementById('tabBar').innerHTML = '';
-      document.getElementById('resultsContent').innerHTML = '';
-          document.getElementById('aiOutput').innerHTML = '';
-              document.getElementById('aiAllNotice').style.display = 'none';
-  document.getElementById('aiControls').style.display = 'block';
-  document.getElementById('autoRefresh').checked = false;
-  toggleAutoRefresh();
-  log('');
-}
+        document.getElementById('runBtn').disabled = true;
+        TOPICS = [];
+        const cutoff = allTime ? 0 : (Date.now() - numDays*24*3600000);
+        const totalChannels = topicsInput.reduce((s,t) => s + t.lines.length, 0);
+        let doneCount = 0;
 
-function toggleAutoRefresh(){
-    const on = document.getElementById('autoRefresh').checked;
-  if(autoTimer){ clearInterval(autoTimer); autoTimer = null; }
-  if(on){
-    autoTimer = setInterval(() => {
-            if(!document.getElementById('runBtn').disabled) runScan();
-  }, 5 * 60 * 1000);
-}
-      }
-
-function parseChannelLine(line){
-    line = line.trim();
-  if(!line) return null;
-  let m = line.match(/channel\/(UC[\w-]{20,})/);
-  if(m) return {type:'id', value:m[1]};
-  m = line.match(/@([\w.\-]+)/);
-  if(m) return {type:'handle', value:m[1]};
-  if(/^UC[\w-]{20,}$/.test(line)) return {type:'id', value:line};
-  if(line.startsWith('@')) return {type:'handle', value:line.slice(1)};
-  m = line.match(/\/(?:c|user)\/([\w.\-]+)/);
-      if(m) return {type:'handle', value:m[1]};
-  return {type:'handle', value:line};
-}
-
-async function apiGet(path, params){
-  const url = new URL(PROXY_BASE + '/youtube/' + path);
-  Object.entries(params).forEach(([k,v]) => url.searchParams.set(k,v));
-    const res = await fetch(url.toString(), { headers: { 'X-Team-Password': TEAM_PASSWORD } });
-    if(res.status === 401){ handleAuthError(); throw new Error('Sai mật khẩu truy cập.'); }
-  const data = await res.json();
-  if(!res.ok){
-    const msg = data && data.error ? data.error.message : ('Lỗi HTTP ' + res.status);
-    throw new Error(msg);
-}
-  return data;
-}
-
-async function resolveChannel(parsed){
-  let data;
-  if(parsed.type === 'id'){
-    data = await apiGet('channels', {part:'snippet,contentDetails', id: parsed.value});
-} else {
-    data = await apiGet('channels', {part:'snippet,contentDetails', forHandle: parsed.value});
-    if(!data.items || !data.items.length){
-      const s = await apiGet('search', {part:'snippet', type:'channel', q: parsed.value, maxResults:1});
-      if(s.items && s.items.length){
-        const cid = s.items[0].snippet.channelId || s.items[0].id.channelId;
-        data = await apiGet('channels', {part:'snippet,contentDetails', id: cid});
-}
-}
-}
-  if(!data.items || !data.items.length) throw new Error('Không tìm thấy kênh');
-  const it = data.items[0];
-  return {
-    id: it.id,
-    title: it.snippet.title,
-    avatar: it.snippet.thumbnails && it.snippet.thumbnails.default ? it.snippet.thumbnails.default.url : '',
-    uploadsPlaylist: it.contentDetails.relatedPlaylists.uploads
-};
-}
-
-// Tự động lấy nhiều trang cho đến khi đủ maxResults HOẶC video đã cũ hơn cutoff (ngoài khung ngày quan tâm).
-          // Nhờ vậy "video tối đa" chỉ là giới hạn an toàn, còn thực tế tool lấy đủ toàn bộ video trong đúng số ngày đã chọn.
-          async function fetchRecentVideoIds(playlistId, maxResults, cutoff){
-              let ids = [];
-              let pageToken = '';
-              const maxPages = 10; // an toàn: tối đa 500 video/kênh mỗi lần quét, tránh tốn quota vô hạn nếu cấu hình sai
-              for(let page = 0; page < maxPages; page++){
-                    const params = {part:'contentDetails', playlistId, maxResults:50};
-                    if(pageToken) params.pageToken = pageToken;
-                    const data = await apiGet('playlistItems', params);
-                    const items = data.items || [];
-                    if(!items.length) break;
-
-                    let hitCutoff = false;
-                    for(const it of items){
-                            ids.push(it.contentDetails.videoId);
-                            const publishedAt = new Date(it.contentDetails.videoPublishedAt || 0).getTime();
-                            if(cutoff && publishedAt && publishedAt < cutoff){ hitCutoff = true; break; }
-                    }
-                    if(hitCutoff) break;
-                    if(ids.length >= maxResults) break;
-                    if(!data.nextPageToken) break;
-                    pageToken = data.nextPageToken;
-              }
-              return ids.slice(0, maxResults);
-          }
-
-function parseDuration(iso){
-  const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-  if(!m) return 0;
-  const h = parseInt(m[1]||0), mi = parseInt(m[2]||0), s = parseInt(m[3]||0);
-  return h*3600 + mi*60 + s;
-}
-
-async function fetchVideoDetails(ids){
-    if(!ids.length) return [];
-    const chunks = [];
-    for(let i = 0; i < ids.length; i += 50) chunks.push(ids.slice(i, i + 50));
-    const responses = await Promise.all(chunks.map(chunk =>
-          apiGet('videos', {part:'snippet,statistics,contentDetails', id: chunk.join(',')})
-        ));
-    const allItems = responses.flatMap(data => data.items || []);
-    const now = Date.now();
-    return allItems.map(it => {
-          const publishedAt = new Date(it.snippet.publishedAt).getTime();
-          const hours = Math.max((now - publishedAt) / 3600000, 0.1);
-          const views = parseInt(it.statistics.viewCount || 0);
-          const likes = it.statistics.likeCount !== undefined ? parseInt(it.statistics.likeCount) : null;
-          const comments = it.statistics.commentCount !== undefined ? parseInt(it.statistics.commentCount) : null;
-          const durSec = parseDuration(it.contentDetails.duration || 'PT0S');
-          return {
-                  id: it.id,
-                  title: it.snippet.title,
-                  thumb: it.snippet.thumbnails.medium ? it.snippet.thumbnails.medium.url : it.snippet.thumbnails.default.url,
-                  publishedAt,
-                  views,
-                  likes,
-                  comments,
-                  hours,
-                  vph: views / hours,
-                  isShort: durSec > 0 && durSec <= 180
-          };
-    });
-}
-
-function extractKeywords(title){
-    const clean = title.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, ' ');
-  return clean.split(/\s+/).filter(w => w.length > 1 && !STOPWORDS.has(w) && !/^\d+$/.test(w));
-}
-
-// Chạy tối đa `limit` việc đồng thời thay vì tuần tự — tăng tốc quét nhiều kênh rõ rệt.
-          async function runWithConcurrency(items, limit, worker){
-              const results = new Array(items.length);
-              let nextIndex = 0;
-              async function runNext(){
-                    while(nextIndex < items.length){
-                            const i = nextIndex++;
-                            results[i] = await worker(items[i]);
-                    }
-              }
-              const runners = Array.from({length: Math.min(limit, items.length)}, runNext);
-              await Promise.all(runners);
-              return results;
-          }
-
-          async function scanOneTopic(topic, numVideos, threshold, cutoff, onProgress){
-              let done = 0;
-              const rawResults = await runWithConcurrency(topic.lines, 6, async (raw) => {
-                    try{
-                            const parsed = parseChannelLine(raw);
-                            const ch = await resolveChannel(parsed);
-                            const ids = await fetchRecentVideoIds(ch.uploadsPlaylist, numVideos, cutoff);
-                            let videos = await fetchVideoDetails(ids);
-                            videos = videos.filter(v => v.publishedAt >= cutoff);
-
-                            const shorts = videos.filter(v => v.isShort);
-                            const longs = videos.filter(v => !v.isShort);
-                            const avg = arr => arr.length ? arr.reduce((s,v)=>s+v.vph,0)/arr.length : 0;
-                            const avgShort = avg(shorts), avgLong = avg(longs);
-
-                            videos.forEach(v => {
-                                      const base = v.isShort ? avgShort : avgLong;
-                                      v.hot = base > 0 && v.vph >= base * threshold;
-                                      v.channelTitle = ch.title;
-                                      v.topicName = topic.name;
-                            });
-                            videos.sort((a,b) => b.vph - a.vph);
-
-                            done++;
-                            if(onProgress) onProgress(done, raw);
-                            return {channel: ch, videos};
-                    }catch(e){
-                            done++;
-                            if(onProgress) onProgress(done, raw);
-                            return {channel:{title: raw, error: e.message}, videos:[]};
-                    }
+        for(const topic of topicsInput){
+              const result = await scanOneTopic(topic, numVideos, threshold, cutoff, maxPages, (d, raw) => {
+                      doneCount++;
+                      log(`Đang quét ${doneCount}/${totalChannels} — [${topic.name}] ${raw}`);
               });
+              TOPICS.push(result);
+        }
+        const now = new Date();
+        const pad = n => String(n).padStart(2,'0');
+        const totalDup = TOPICS.reduce((s,t) => s + (t.duplicatesRemoved||0), 0);
+        const dupNote = totalDup > 0 ? ` (đã bỏ qua ${totalDup} kênh trùng lặp)` : '';
+        log(`Xong. Đã quét ${totalChannels} kênh trong ${topicsInput.length} chủ đề${dupNote} — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
+        document.getElementById('runBtn').disabled = false;
 
-              const seenIds = new Set();
-              const topicResults = [];
-              let duplicatesRemoved = 0;
-              for(const r of rawResults){
-                    if(r.channel && r.channel.id){
-                            if(seenIds.has(r.channel.id)){ duplicatesRemoved++; continue; }
-                            seenIds.add(r.channel.id);
-                    }
-                    topicResults.push(r);
-              }
+        activeTab = 'ALL';
+        renderTabs();
+        renderActiveTab();
+        updateAIPanelVisibility();
+    }
 
-              return {id: topic.id, name: topic.name, results: topicResults, duplicatesRemoved};
-          }
-                    
-          async function runScan(){
-              const topicsInput = collectTopicsInput();
-              const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
-              const numDays = parseInt(document.getElementById('numDays').value) || 14;
-              const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
-              const allTime = document.getElementById('allTime').checked;
+    async function runScanTopic(topicId, btn){
+        const card = document.querySelector(`.topic-card[data-id="${topicId}"]`);
+        if(!card) return;
+        const name = card.querySelector('.topic-name').value.trim() || 'Chủ đề';
+        const lines = card.querySelector('.topic-channels').value.split('\n').map(l => l.trim()).filter(Boolean);
+        if(!lines.length){ log(`Chủ đề "${name}" chưa nhập kênh nào.`, true); return; }
 
-              if(!topicsInput.length){ log('Chưa nhập kênh nào.', true); return; }
+        const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
+        const numDays = parseInt(document.getElementById('numDays').value) || 14;
+        const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
+        const allTime = document.getElementById('allTime').checked;
+        const cutoff = allTime ? 0 : (Date.now() - numDays*24*3600000);
+        const maxPages = document.getElementById('unlimitedPages').checked ? 1000 : 10;
 
-              document.getElementById('runBtn').disabled = true;
-              TOPICS = [];
-              const cutoff = allTime ? 0 : (Date.now() - numDays*24*3600000);
-              const totalChannels = topicsInput.reduce((s,t) => s + t.lines.length, 0);
-              let doneCount = 0;
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Đang quét...';
+        document.getElementById('runBtn').disabled = true;
 
-              for(const topic of topicsInput){
-                    const result = await scanOneTopic(topic, numVideos, threshold, cutoff, (d, raw) => {
-                            doneCount++;
-                            log(`Đang quét ${doneCount}/${totalChannels} — [${topic.name}] ${raw}`);
-                    });
-                    TOPICS.push(result);
-              }
+        let doneCount = 0;
+        const result = await scanOneTopic({id: topicId, name, lines}, numVideos, threshold, cutoff, maxPages, (d, raw) => {
+              doneCount++;
+              log(`Đang quét "${name}": ${doneCount}/${lines.length} — ${raw}`);
+        });
 
-              const now = new Date();
-              const pad = n => String(n).padStart(2,'0');
-              const totalDup = TOPICS.reduce((s,t) => s + (t.duplicatesRemoved||0), 0);
-              const dupNote = totalDup > 0 ? ` (đã bỏ qua ${totalDup} kênh trùng lặp)` : '';
-              log(`Xong. Đã quét ${totalChannels} kênh trong ${topicsInput.length} chủ đề${dupNote} — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
-              document.getElementById('runBtn').disabled = false;
+        const idx = TOPICS.findIndex(t => t.id === topicId);
+        if(idx >= 0) TOPICS[idx] = result; else TOPICS.push(result);
 
-              activeTab = 'ALL';
-              renderTabs();
-              renderActiveTab();
-              updateAIPanelVisibility();
-          }
-          async function runScanTopic(topicId, btn){
-              const card = document.querySelector(`.topic-card[data-id="${topicId}"]`);
-              if(!card) return;
-              const name = card.querySelector('.topic-name').value.trim() || 'Chủ đề';
-              const lines = card.querySelector('.topic-channels').value.split('\n').map(l => l.trim()).filter(Boolean);
-              if(!lines.length){ log(`Chủ đề "${name}" chưa nhập kênh nào.`, true); return; }
+        const now = new Date();
+        const pad = n => String(n).padStart(2,'0');
+        const dupNote = result.duplicatesRemoved > 0 ? ` (đã bỏ qua ${result.duplicatesRemoved} kênh trùng lặp)` : '';
+        log(`Xong "${name}"${dupNote} — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
 
-              const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
-              
+        btn.disabled = false;
+        btn.textContent = originalText;
+        document.getElementById('runBtn').disabled = false;
 
-              const originalText = btn.textContent;
-              btn.disabled = true;
-              btn.textContent = 'Đang quét...';
-              document.getElementById('runBtn').disabled = true;
+        activeTab = topicId;
+        renderTabs();
+        renderActiveTab();
+        updateAIPanelVisibility();
+    }
 
-              let doneCount = 0;
-              const result = await scanOneTopic({id: topicId, name, lines}, numVideos, threshold, cutoff, (d, raw) => {
-                    doneCount++;
-                    log(`Đang quét "${name}": ${doneCount}/${lines.length} — ${raw}`);
-              });
+    function fmtNum(n){
+        return n.toLocaleString('vi-VN');
+    }
+    function fmtVph(v){
+        if(v >= 1000) return (v/1000).toFixed(1) + 'K/h';
+        return v.toFixed(0) + '/h';
+    }
+    function fmtDateTime(ts){
+        const d = new Date(ts);
+        const pad = n => String(n).padStart(2,'0');
+        return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} · ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+    function fmtStat(n){
+        return (n === null || n === undefined) ? '—' : fmtNum(n);
+    }
+    function videoRow(v, prefix){
+        const badge = v.hot ? `<span class="badge">🔥 Đang lên</span>` : '';
+        const tag = v.isShort ? 'Shorts' : 'Video';
+        let regionBadge = '';
+        if(v.region){
+              if(v.region.type === 'blocked') regionBadge = `<span class="region-badge" title="Chặn tại: ${v.region.countries.join(', ')}">🌍 Chặn ${v.region.countries.length} nước</span>`;
+              else regionBadge = `<span class="region-badge" title="Chỉ xem được tại: ${v.region.countries.join(', ')}">🌍 Chỉ ${v.region.countries.length} nước</span>`;
+        }
+        const prefixHtml = prefix ? `<div class="dim-cell" style="margin-bottom:2px">${prefix}</div>` : '';
+        videoDataMap[v.id] = v.title;
+        return `<tr>
+            <td>
+                  <a href="https://youtube.com/watch?v=${v.id}" target="_blank"><img class="thumb" src="${v.thumb}"></a>
+                        <button class="thumb-dl-btn" onclick="downloadThumbnail('${v.id}', this)" title="Tải thumbnail chất lượng cao nhất (.jpg)">⬇ Tải ảnh</button>
+                            </td>
+                                <td>${prefixHtml}<a class="vtitle" href="https://youtube.com/watch?v=${v.id}" target="_blank">${v.title}</a><span class="type-tag">${tag}</span>${regionBadge}</td>
+                                    <td class="vph" style="color:${v.hot?'var(--hot)':'var(--text)'}">${fmtVph(v.vph)}</td>
+                                        <td class="dim-cell">${fmtNum(v.views)}</td>
+                                            <td class="dim-cell">${fmtStat(v.likes)}</td>
+                                                <td class="dim-cell">${fmtStat(v.comments)}</td>
+                                                    <td class="dim-cell">${fmtDateTime(v.publishedAt)}</td>
+                                                        <td>${badge}</td>
+                                                          </tr>`;
+    }
 
-              const idx = TOPICS.findIndex(t => t.id === topicId);
-              if(idx >= 0) TOPICS[idx] = result; else TOPICS.push(result);
+    function renderHotTable(list, prefixFn){
+        if(!list.length) return `<div class="panel"><div class="empty">Chưa có video nào vượt ngưỡng "đang lên".</div></div>`;
+        let html = `<div class="panel"><table><thead><tr><th></th><th>Tiêu đề${prefixFn?' / Nguồn':''}</th><th>VPH</th><th>View</th><th>Like</th><th>Cmt</th><th>Ngày · Giờ đăng</th><th></th></tr></thead><tbody>`;
+        list.slice(0,20).forEach(v => html += videoRow(v, prefixFn ? prefixFn(v) : null));
+        html += `</tbody></table></div>`;
+        return html;
+    }
 
-              const now = new Date();
-              const pad = n => String(n).padStart(2,'0');
-              const dupNote = result.duplicatesRemoved > 0 ? ` (đã bỏ qua ${result.duplicatesRemoved} kênh trùng lặp)` : '';
-              log(`Xong "${name}"${dupNote} — cập nhật lúc ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
+    function renderKeywordPanel(list){
+        const freq = {};
+        list.forEach(v => extractKeywords(v.title).forEach(w => freq[w] = (freq[w]||0)+1));
+        const top = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,14);
+        if(!top.length) return '';
+        return `<div class="panel">
+            <div class="kw-title">Từ khóa xuất hiện nhiều nhất trong các video đang lên</div>
+                <div class="kw-list">${top.map(([w,c]) => `<span class="kw-chip"><b>${w}</b> · ${c}</span>`).join('')}</div>
+                  </div>`;
+    }
 
-              btn.disabled = false;
-              btn.textContent = originalText;
-              document.getElementById('runBtn').disabled = false;
+    let channelDataMap = {};
+    let videoDataMap = {};
 
-              activeTab = topicId;
-              renderTabs();
-              renderActiveTab();
-              updateAIPanelVisibility();
-          }
-          
-
-function fmtNum(n){
-    return n.toLocaleString('vi-VN');
-}
-function fmtVph(v){
-    if(v >= 1000) return (v/1000).toFixed(1) + 'K/h';
-  return v.toFixed(0) + '/h';
-}
-function fmtDateTime(ts){
-    const d = new Date(ts);
-  const pad = n => String(n).padStart(2,'0');
-  return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} · ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-function fmtStat(n){
-    return (n === null || n === undefined) ? '—' : fmtNum(n);
-}
-
-function videoRow(v, prefix){
-    const badge = v.hot ? `<span class="badge">🔥 Đang lên</span>` : '';
-  const tag = v.isShort ? 'Shorts' : 'Video';
-  const prefixHtml = prefix ? `<div class="dim-cell" style="margin-bottom:2px">${prefix}</div>` : '';
-    videoDataMap[v.id] = v.title;
-  return `<tr>
-        <td>
-              <a href="https://youtube.com/watch?v=${v.id}" target="_blank"><img class="thumb" src="${v.thumb}"></a>
-                    <button class="thumb-dl-btn" onclick="downloadThumbnail('${v.id}', this)" title="Tải thumbnail chất lượng cao nhất (.jpg)">⬇ Tải ảnh</button>
-                        </td>
-    <td>${prefixHtml}<a class="vtitle" href="https://youtube.com/watch?v=${v.id}" target="_blank">${v.title}</a><span class="type-tag">${tag}</span></td>
-    <td class="vph" style="color:${v.hot?'var(--hot)':'var(--text)'}">${fmtVph(v.vph)}</td>
-    <td class="dim-cell">${fmtNum(v.views)}</td>
-    <td class="dim-cell">${fmtStat(v.likes)}</td>
-    <td class="dim-cell">${fmtStat(v.comments)}</td>
-    <td class="dim-cell">${fmtDateTime(v.publishedAt)}</td>
-    <td>${badge}</td>
-  </tr>`;
-}
-
-function renderHotTable(list, prefixFn){
-  if(!list.length) return `<div class="panel"><div class="empty">Chưa có video nào vượt ngưỡng "đang lên".</div></div>`;
-  let html = `<div class="panel"><table><thead><tr><th></th><th>Tiêu đề${prefixFn?' / Nguồn':''}</th><th>VPH</th><th>View</th><th>Like</th><th>Cmt</th><th>Ngày · Giờ đăng</th><th></th></tr></thead><tbody>`;
-  list.slice(0,20).forEach(v => html += videoRow(v, prefixFn ? prefixFn(v) : null));
-    html += `</tbody></table></div>`;
-    return html;
-}
-          
-          function renderKeywordPanel(list){
-              const freq = {};
-              list.forEach(v => extractKeywords(v.title).forEach(w => freq[w] = (freq[w]||0)+1));
-              const top = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,14);
-              if(!top.length) return '';
-              return `<div class="panel">
-                  <div class="kw-title">Từ khóa xuất hiện nhiều nhất trong các video đang lên</div>
-                      <div class="kw-list">${top.map(([w,c]) => `<span class="kw-chip"><b>${w}</b> · ${c}</span>`).join('')}</div>
-                        </div>`;
-          }
-          
-          let channelDataMap = {};
-          let videoDataMap = {};
-          
-          function renderChannelBlock(r, uid){
-              let html = `<div class="channel-block panel">`;
-              if(r.channel.error){
-                    html += `<div class="channel-head"><span class="ch-name">${r.channel.title}</span><span class="ch-meta" style="color:var(--hot)">${r.channel.error}</span></div>`;
+    function renderChannelBlock(r, uid){
+        let html = `<div class="channel-block panel">`;
+        if(r.channel.error){
+              html += `<div class="channel-head"><span class="ch-name">${r.channel.title}</span><span class="ch-meta" style="color:var(--hot)">${r.channel.error}</span></div>`;
+        } else {
+              const canAnalyze = r.videos.length > 0;
+              if(canAnalyze) channelDataMap[uid] = { videos: r.videos, channelTitle: r.channel.title };
+              html += `<div class="channel-head">
+                    ${r.channel.avatar ? `<img class="ch-avatar" src="${r.channel.avatar}">` : ''}
+                          <span class="ch-name">${r.channel.title}</span>
+                                <span class="ch-meta">${r.videos.length} video · ${r.videos.filter(v=>v.hot).length} đang lên</span>
+                                      ${canAnalyze ? `<button class="btn secondary ch-ai-btn" id="chAiBtn_${uid}" onclick="analyzeChannel('${uid}')">🤖 Phân tích kênh</button>` : ''}
+                                          </div>`;
+              if(r.videos.length){
+                      html += `<table><thead><tr><th></th><th>Tiêu đề</th><th>VPH</th><th>View</th><th>Like</th><th>Cmt</th><th>Ngày · Giờ đăng</th><th></th></tr></thead><tbody>`;
+                      r.videos.forEach(v => html += videoRow(v));
+                      html += `</tbody></table>`;
               } else {
-                    const canAnalyze = r.videos.length > 0;
-                    if(canAnalyze) channelDataMap[uid] = { videos: r.videos, channelTitle: r.channel.title };
-                    html += `<div class="channel-head">
-                          ${r.channel.avatar ? `<img class="ch-avatar" src="${r.channel.avatar}">` : ''}
-                                <span class="ch-name">${r.channel.title}</span>
-                                      <span class="ch-meta">${r.videos.length} video · ${r.videos.filter(v=>v.hot).length} đang lên</span>
-                                            ${canAnalyze ? `<button class="btn secondary ch-ai-btn" id="chAiBtn_${uid}" onclick="analyzeChannel('${uid}')">🤖 Phân tích kênh</button>` : ''}
-                                                </div>`;
-                    if(r.videos.length){
-                            html += `<table><thead><tr><th></th><th>Tiêu đề</th><th>VPH</th><th>View</th><th>Like</th><th>Cmt</th><th>Ngày · Giờ đăng</th><th></th></tr></thead><tbody>`;
-                            r.videos.forEach(v => html += videoRow(v));
-                            html += `</tbody></table>`;
-                    } else {
-                            html += `<div class="empty">Không có video nào trong khung thời gian đã chọn.</div>`;
-                    }
-                    if(canAnalyze){
-                            html += `<div class="status" id="chAiStatus_${uid}" style="margin-top:10px;"></div><div id="chAiOutput_${uid}"></div>`;
-                    }
+                      html += `<div class="empty">Không có video nào trong khung thời gian đã chọn.</div>`;
               }
-              html += `</div>`;
-              return html;
-          }
-          
-          function renderTabs(){
-              const bar = document.getElementById('tabBar');
-              if(!TOPICS.length){ bar.innerHTML = ''; return; }
-              let html = `<button class="sheet-tab ${activeTab==='ALL'?'active':''}" onclick="switchTab('ALL')">📊 Tất cả</button>`;
+              if(canAnalyze){
+                      html += `<div class="status" id="chAiStatus_${uid}" style="margin-top:10px;"></div><div id="chAiOutput_${uid}"></div>`;
+              }
+        }
+        html += `</div>`;
+        return html;
+    }
+
+    function renderTabs(){
+        const bar = document.getElementById('tabBar');
+        if(!TOPICS.length){ bar.innerHTML = ''; return; }
+        let html = `<button class="sheet-tab ${activeTab==='ALL'?'active':''}" onclick="switchTab('ALL')">📊 Tất cả</button>`;
+        TOPICS.forEach(t => {
+              html += `<button class="sheet-tab ${activeTab===t.id?'active':''}" onclick="switchTab('${t.id}')">${t.name}</button>`;
+        });
+        bar.innerHTML = html;
+    }
+
+    function updateAIPanelVisibility(){
+        const notice = document.getElementById('aiAllNotice');
+        const controls = document.getElementById('aiControls');
+        if(activeTab === 'ALL'){
+              notice.style.display = 'block';
+              controls.style.display = 'none';
+        } else {
+              notice.style.display = 'none';
+              controls.style.display = 'block';
+        }
+    }
+
+    function switchTab(id){
+        activeTab = id;
+        renderTabs();
+        renderActiveTab();
+        updateAIPanelVisibility();
+        document.getElementById('aiOutput').innerHTML = '';
+        aiStatusSet('Sẵn sàng phân tích sheet đang chọn.');
+    }
+
+    function renderActiveTab(){
+        const container = document.getElementById('resultsContent');
+        channelDataMap = {};
+        videoDataMap = {};
+        if(!TOPICS.length){ container.innerHTML = ''; return; }
+        let html = '';
+
+        if(activeTab === 'ALL'){
+              const allVideos = TOPICS.flatMap(t => t.results.flatMap(r => r.videos));
+              const allHot = allVideos.filter(v=>v.hot).sort((a,b)=>b.vph-a.vph);
+              html += `<div class="section-title">🔥 Video đang lên — tất cả chủ đề (${allHot.length})</div>`;
+              html += renderHotTable(allHot, v => `${v.topicName} · ${v.channelTitle}`);
+
+              html += `<div class="section-title">Chi tiết theo từng chủ đề</div>`;
               TOPICS.forEach(t => {
-                    html += `<button class="sheet-tab ${activeTab===t.id?'active':''}" onclick="switchTab('${t.id}')">${t.name}</button>`;
+                      const topicHotCount = t.results.flatMap(r=>r.videos).filter(v=>v.hot).length;
+                      html += `<div class="topic-section-head">📁 ${t.name} <span class="ch-meta" style="margin-left:0">(${topicHotCount} đang lên)</span></div>`;
+                      t.results.forEach((r, i) => html += renderChannelBlock(r, `${t.id}_${i}`));
               });
-              bar.innerHTML = html;
-          }
-          
-          function updateAIPanelVisibility(){
-              const notice = document.getElementById('aiAllNotice');
-              const controls = document.getElementById('aiControls');
-              if(activeTab === 'ALL'){
-                    notice.style.display = 'block';
-                    controls.style.display = 'none';
-              } else {
-                    notice.style.display = 'none';
-                    controls.style.display = 'block';
+        } else {    const topic = TOPICS.find(t => t.id === activeTab);
+                    if(!topic){ container.innerHTML = ''; return; }
+                    const hot = topic.results.flatMap(r=>r.videos).filter(v=>v.hot).sort((a,b)=>b.vph-a.vph);
+                    html += `<div class="section-title">🔥 Video đang lên — ${topic.name} (${hot.length})</div>`;
+                    html += renderHotTable(hot, v => v.channelTitle);
+                    html += renderKeywordPanel(hot);
+                    html += `<div class="section-title">Chi tiết từng kênh</div>`;
+                    topic.results.forEach((r, i) => html += renderChannelBlock(r, `${topic.id}_${i}`));
+               }
+
+        container.innerHTML = html;
+        applyKeywordFilter();
+    }
+
+    function applyKeywordFilter(){
+        const input = document.getElementById('keywordFilter');
+        if(!input) return;
+        const kw = input.value.trim().toLowerCase();
+        const container2 = document.getElementById('resultsContent');
+        if(!container2) return;
+
+        if(!kw){
+              container2.querySelectorAll('tr, .channel-block').forEach(el => el.style.display = '');
+              return;
+        }
+
+        container2.querySelectorAll('table tr').forEach(row => {
+              if(row.querySelector('th')) return;
+              row.style.display = row.textContent.toLowerCase().includes(kw) ? '' : 'none';
+        });
+
+        container2.querySelectorAll('.channel-block').forEach(block => {
+              const chName = block.querySelector('.ch-name');
+              const chMatches = chName && chName.textContent.toLowerCase().includes(kw);
+              if(chMatches){
+                      block.querySelectorAll('table tr').forEach(r => r.style.display = '');
+                      block.style.display = '';
+                      return;
               }
-          }
-          
-          function switchTab(id){
-              activeTab = id;
-              renderTabs();
-              renderActiveTab();
-              updateAIPanelVisibility();
-              document.getElementById('aiOutput').innerHTML = '';
-              aiStatusSet('Sẵn sàng phân tích sheet đang chọn.');
-          }
-          
-          function renderActiveTab(){
-  const container = document.getElementById('resultsContent');
-  channelDataMap = {};
-              videoDataMap = {};
-  if(!TOPICS.length){ container.innerHTML = ''; return; }
-  let html = '';
+              const anyVideoVisible = Array.from(block.querySelectorAll('table tr')).some(r => r.style.display !== 'none');
+              block.style.display = anyVideoVisible ? '' : 'none';
+        });
+    }
 
-  if(activeTab === 'ALL'){
-    const allVideos = TOPICS.flatMap(t => t.results.flatMap(r => r.videos));
-    const allHot = allVideos.filter(v=>v.hot).sort((a,b)=>b.vph-a.vph);
-    html += `<div class="section-title">🔥 Video đang lên — tất cả chủ đề (${allHot.length})</div>`;
-    html += renderHotTable(allHot, v => `${v.topicName} · ${v.channelTitle}`);
+    function getActiveHotVideos(){
+        if(!TOPICS.length) return [];
+        if(activeTab === 'ALL'){
+              return TOPICS.flatMap(t => t.results.flatMap(r => r.videos)).filter(v=>v.hot).sort((a,b)=>b.vph-a.vph);
+        }
+        const topic = TOPICS.find(t => t.id === activeTab);
+        if(!topic) return [];
+        return topic.results.flatMap(r => r.videos).filter(v=>v.hot).sort((a,b)=>b.vph-a.vph);
+    }
 
-    html += `<div class="section-title">Chi tiết theo từng chủ đề</div>`;
-    TOPICS.forEach(t => {
-      const topicHotCount = t.results.flatMap(r=>r.videos).filter(v=>v.hot).length;
-      html += `<div class="topic-section-head">📁 ${t.name} <span class="ch-meta" style="margin-left:0">(${topicHotCount} đang lên)</span></div>`;
-      t.results.forEach((r, i) => html += renderChannelBlock(r, `${t.id}_${i}`));
-});
-} else {
-    const topic = TOPICS.find(t => t.id === activeTab);
-    if(!topic){ container.innerHTML = ''; return; }
-    const hot = topic.results.flatMap(r=>r.videos).filter(v=>v.hot).sort((a,b)=>b.vph-a.vph);
-    html += `<div class="section-title">🔥 Video đang lên — ${topic.name} (${hot.length})</div>`;
-    html += renderHotTable(hot, v => v.channelTitle);
-    html += renderKeywordPanel(hot);
-    html += `<div class="section-title">Chi tiết từng kênh</div>`;
-    topic.results.forEach((r, i) => html += renderChannelBlock(r, `${topic.id}_${i}`));
-}
+    async function fetchThumbBase64(url){
+        try{
+              const res = await fetch(url);
+              if(!res.ok) return null;
+              const blob = await res.blob();
+              return await new Promise((resolve) => {
+                      const reader = new FileReader();
+                      reader.onload = () => resolve(reader.result.split(',')[1]);
+                      reader.onerror = () => resolve(null);
+                      reader.readAsDataURL(blob);
+              });
+        }catch(e){ return null; }
+    }
 
-  container.innerHTML = html;
-}
+    function aiStatusSet(msg, isErr){
+        const el = document.getElementById('aiStatus');
+        el.textContent = msg;
+        el.className = 'status' + (isErr ? ' err' : '');
+    }
 
-function getActiveHotVideos(){
-  if(!TOPICS.length) return [];
-  if(activeTab === 'ALL'){
-    return TOPICS.flatMap(t => t.results.flatMap(r => r.videos)).filter(v=>v.hot).sort((a,b)=>b.vph-a.vph);
-}
-  const topic = TOPICS.find(t => t.id === activeTab);
-  if(!topic) return [];
-  return topic.results.flatMap(r => r.videos).filter(v=>v.hot).sort((a,b)=>b.vph-a.vph);
-}
+    function formatAIText(text){
+        const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        let html = esc(text).trim();
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/^[-*]\s+/gm, '• ');  html = html.replace(/\n/g, '<br>');
+        return html;
+    }
 
-async function fetchThumbBase64(url){
-  try{
-    const res = await fetch(url);
-    if(!res.ok) return null;
-    const blob = await res.blob();
-    return await new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = () => resolve(null);
-      reader.readAsDataURL(blob);
-});
-}catch(e){ return null; }
-}
+    function renderAIOutput(text){
+        document.getElementById('aiOutput').innerHTML = `<div class="ai-result">${formatAIText(text)}</div>`;
+    }
 
-function aiStatusSet(msg, isErr){
-  const el = document.getElementById('aiStatus');
-  el.textContent = msg;
-  el.className = 'status' + (isErr ? ' err' : '');
-}
+    async function callGeminiProxy(model, parts, onRetry){
+        const body = JSON.stringify({contents: [{parts}]});
+        const url = `${GEMINI_PROXY_BASE}/api/gemini/${encodeURIComponent(model)}`;
+        let lastErr;
 
-function formatAIText(text){
-  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  let html = esc(text).trim();
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/^[-*]\s+/gm, '• ');
-  html = html.replace(/\n/g, '<br>');
-  return html;
-}
+        for(let attempt = 0; attempt < 3; attempt++){
+              try{
+                      const res = await fetch(url, {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json', 'X-Team-Password': TEAM_PASSWORD},
+                                body
+                      });
+                      if(res.status === 401){ handleAuthError(); throw new Error('Sai mật khẩu truy cập.'); }
+                      const data = await res.json().catch(() => null);
 
-function renderAIOutput(text){
-  document.getElementById('aiOutput').innerHTML = `<div class="ai-result">${formatAIText(text)}</div>`;
-}
+                      if(res.ok && data) return data;
 
-// Gọi Gemini proxy, tự động thử lại 1 lần nếu gặp lỗi tạm thời (cold start, 5xx, mất kết nối tạm).
-async function callGeminiProxy(model, parts, onRetry){
-  const body = JSON.stringify({contents: [{parts}]});
-  const url = `${GEMINI_PROXY_BASE}/api/gemini/${encodeURIComponent(model)}`;
-  let lastErr;
+                      const isTransient = res.status >= 500 || res.status === 0;
+                      if(isTransient && attempt < 2){
+                                lastErr = new Error((data && data.error && data.error.message) || `Lỗi tạm thời (HTTP ${res.status})`);
+                                if(onRetry) onRetry(attempt + 1);
+                                await new Promise(r => setTimeout(r, 1200 + attempt * 800));
+                                continue;
+                      }
+                      throw new Error((data && data.error && data.error.message) || `Lỗi HTTP ${res.status}`);
+              }catch(e){
+                      lastErr = e;
+                      if(attempt < 2 && (e.message.includes('fetch') || e.message.includes('Lỗi tạm thời'))){
+                                if(onRetry) onRetry(attempt + 1);
+                                await new Promise(r => setTimeout(r, 1200 + attempt * 800));
+                                continue;
+                      }
+                      throw e;
+              }
+        }
+        throw lastErr || new Error('Không kết nối được tới Gemini proxy.');
+    }
 
-  for(let attempt = 0; attempt < 3; attempt++){
-    try{
-      const res = await fetch(url, {
-        method: 'POST',
-                  headers: {'Content-Type': 'application/json', 'X-Team-Password': TEAM_PASSWORD},
-                body
-      });
-              if(res.status === 401){ handleAuthError(); throw new Error('Sai mật khẩu truy cập.'); }
-      const data = await res.json().catch(() => null);
+    async function analyzeWithGemini(){
+        const model = document.getElementById('geminiModel').value.trim() || 'gemini-3.5-flash';
 
-      if(res.ok && data) return data;
+        if(!TOPICS.length){ aiStatusSet('Chưa có dữ liệu — quét đối thủ trước.', true); return; }
 
-      // Lỗi tạm thời (cold start / server quá tải) -> thử lại; lỗi khác -> báo ngay.
-      const isTransient = res.status >= 500 || res.status === 0;
-      if(isTransient && attempt < 2){
-        lastErr = new Error((data && data.error && data.error.message) || `Lỗi tạm thời (HTTP ${res.status})`);
-        if(onRetry) onRetry(attempt + 1);
-        await new Promise(r => setTimeout(r, 1200 + attempt * 800));
-        continue;
-}
-      throw new Error((data && data.error && data.error.message) || `Lỗi HTTP ${res.status}`);
-}catch(e){
-      lastErr = e;
-      if(attempt < 2 && (e.message.includes('fetch') || e.message.includes('Lỗi tạm thời'))){
-        if(onRetry) onRetry(attempt + 1);
-        await new Promise(r => setTimeout(r, 1200 + attempt * 800));
-        continue;
-}
-      throw e;
-}
-}
-  throw lastErr || new Error('Không kết nối được tới Gemini proxy.');
-}
+        const picked = getActiveHotVideos().slice(0, 15);
+        if(!picked.length){ aiStatusSet('Sheet đang chọn chưa có video "đang lên" nào.', true); return; }
 
-async function analyzeWithGemini(){
-  const model = document.getElementById('geminiModel').value.trim() || 'gemini-3.5-flash';
+        const isAll = activeTab === 'ALL';
+        const scopeLabel = isAll ? 'nhiều chủ đề khác nhau' : `chủ đề "${TOPICS.find(t=>t.id===activeTab)?.name}"`;
 
-  if(!TOPICS.length){ aiStatusSet('Chưa có dữ liệu — quét đối thủ trước.', true); return; }
+        document.getElementById('aiBtn').disabled = true;
+        document.getElementById('aiOutput').innerHTML = '';
+        aiStatusSet('Đang tải thumbnail...');
 
-  const picked = getActiveHotVideos().slice(0, 15);
-  if(!picked.length){ aiStatusSet('Sheet đang chọn chưa có video "đang lên" nào.', true); return; }
-
-  const isAll = activeTab === 'ALL';
-  const scopeLabel = isAll ? 'nhiều chủ đề khác nhau' : `chủ đề "${TOPICS.find(t=>t.id===activeTab)?.name}"`;
-
-  document.getElementById('aiBtn').disabled = true;
-  document.getElementById('aiOutput').innerHTML = '';
-  aiStatusSet('Đang tải thumbnail...');
-
-  const listText = picked.map((v,i) => {
-    const src = isAll ? `[${v.topicName} · ${v.channelTitle}]` : `[${v.channelTitle}]`;
-    return `${i+1}. ${src} "${v.title}" — VPH ${fmtVph(v.vph)}, ${fmtNum(v.views)} view, ${v.isShort?'Shorts':'Video dài'}`;
-      }).join('\n');
+        const listText = picked.map((v,i) => {
+              const src = isAll ? `[${v.topicName} · ${v.channelTitle}]` : `[${v.channelTitle}]`;
+              return `${i+1}. ${src} "${v.title}" — VPH ${fmtVph(v.vph)}, ${fmtNum(v.views)} view, ${v.isShort?'Shorts':'Video dài'}`;
+        }).join('\n');
 
         const imageParts = [];
-  for(const v of picked.slice(0, 10)){
-    const b64 = await fetchThumbBase64(v.thumb);
-    if(b64) imageParts.push({inlineData:{mimeType:'image/jpeg', data:b64}});
-}
+        for(const v of picked.slice(0, 10)){
+              const b64 = await fetchThumbBase64(v.thumb);
+              if(b64) imageParts.push({inlineData:{mimeType:'image/jpeg', data:b64}});
+        }
 
-  const groupingNote = isAll
-    ? 'Các video này thuộc nhiều chủ đề/niche khác nhau (đã ghi rõ tên chủ đề trước tên kênh). Nếu đặc điểm khác biệt rõ rệt giữa các chủ đề, hãy tách phân tích riêng theo từng chủ đề thay vì gộp chung một kết luận.'
-    : '';
+        const groupingNote = isAll    ? 'Các video này thuộc nhiều chủ đề/niche khác nhau (đã ghi rõ tên chủ đề trước tên kênh). Nếu đặc điểm khác biệt rõ rệt giữa các chủ đề, hãy tách phân tích riêng theo từng chủ đề thay vì gộp chung một kết luận.'
+              : '';
 
-  const prompt = `Bạn là chuyên gia phân tích kênh YouTube cho một công ty quản trị kênh. Dưới đây là danh sách ${picked.length} video "đang lên" (VPH cao bất thường so với trung bình kênh) thuộc ${scopeLabel} của các đối thủ:
+        const prompt = `Bạn là chuyên gia phân tích kênh YouTube cho một công ty quản trị kênh. Dưới đây là danh sách ${picked.length} video "đang lên" (VPH cao bất thường so với trung bình kênh) thuộc ${scopeLabel} của các đối thủ:
 
-${listText}
+        ${listText}
 
-${imageParts.length ? `Kèm theo ${imageParts.length} ảnh thumbnail tương ứng, đúng theo thứ tự trong danh sách trên.` : 'Không có ảnh thumbnail đính kèm, chỉ phân tích dựa trên tiêu đề.'}
-${groupingNote}
+        ${imageParts.length ? `Kèm theo ${imageParts.length} ảnh thumbnail tương ứng, đúng theo thứ tự trong danh sách trên.` : 'Không có ảnh thumbnail đính kèm, chỉ phân tích dựa trên tiêu đề.'}
+        ${groupingNote}
 
-Hãy phân tích ĐẶC ĐIỂM CHUNG của các video này, trình bày ngắn gọn, đúng cấu trúc sau:
+        Hãy phân tích ĐẶC ĐIỂM CHUNG của các video này, trình bày ngắn gọn, đúng cấu trúc sau:
 
-**1. Chủ đề/nội dung lặp lại**
-**2. Công thức đặt tiêu đề & từ khóa hay dùng**
-**3. Đặc điểm thumbnail** (màu sắc, bố cục, cảm xúc, chữ trên ảnh — nếu có ảnh kèm)
-**4. Xu hướng định dạng** (Shorts hay video dài đang thắng thế)
-**5. Đề xuất áp dụng** — 3-5 hành động cụ thể cho kênh của mình
+        **1. Chủ đề/nội dung lặp lại**
+        **2. Công thức đặt tiêu đề & từ khóa hay dùng**
+        **3. Đặc điểm thumbnail** (màu sắc, bố cục, cảm xúc, chữ trên ảnh — nếu có ảnh kèm)
+        **4. Xu hướng định dạng** (Shorts hay video dài đang thắng thế)
+        **5. Đề xuất áp dụng** — 3-5 hành động cụ thể cho kênh của mình
 
-Trả lời bằng tiếng Việt, súc tích, ưu tiên gạch đầu dòng, không lan man.`;
+        Trả lời bằng tiếng Việt, súc tích, ưu tiên gạch đầu dòng, không lan man.`;
 
-  const parts = [{text: prompt}, ...imageParts];
-  aiStatusSet('Đang phân tích với Gemini...');
+        const parts = [{text: prompt}, ...imageParts];
+        aiStatusSet('Đang phân tích với Gemini...');
 
-  try{
-    const data = await callGeminiProxy(model, parts, (n) => aiStatusSet(`Gặp lỗi tạm thời, đang thử lại (lần ${n})...`));
-    const cand = data.candidates && data.candidates[0];
-    const text = cand && cand.content && cand.content.parts ? cand.content.parts.map(p => p.text || '').join('') : '';
-    if(!text) throw new Error('Không nhận được nội dung phân tích (có thể bị chặn bởi bộ lọc an toàn của model).');
-    renderAIOutput(text);
-    aiStatusSet(`Xong — đã phân tích ${picked.length} video (${imageParts.length} kèm ảnh thumbnail).`);
-  }catch(e){
-    aiStatusSet('Lỗi: ' + e.message, true);
-  }
-  document.getElementById('aiBtn').disabled = false;
-                 }
+        try{
+              const data = await callGeminiProxy(model, parts, (n) => aiStatusSet(`Gặp lỗi tạm thời, đang thử lại (lần ${n})...`));
+              const cand = data.candidates && data.candidates[0];
+              const text = cand && cand.content && cand.content.parts ? cand.content.parts.map(p => p.text || '').join('') : '';
+              if(!text) throw new Error('Không nhận được nội dung phân tích (có thể bị chặn bởi bộ lọc an toàn của model).');
+              renderAIOutput(text);
+              aiStatusSet(`Xong — đã phân tích ${picked.length} video (${imageParts.length} kèm ảnh thumbnail).`);
+        }catch(e){
+              aiStatusSet('Lỗi: ' + e.message, true);
+        }
+        document.getElementById('aiBtn').disabled = false;
+    }
 
-async function analyzeChannel(uid){
-  const data = channelDataMap[uid];
-  const btn = document.getElementById('chAiBtn_' + uid);
-  const statusEl = document.getElementById('chAiStatus_' + uid);
-  const outEl = document.getElementById('chAiOutput_' + uid);
-  if(!data || !btn || !statusEl || !outEl) return;
+    async function analyzeChannel(uid){
+        const data = channelDataMap[uid];
+        const btn = document.getElementById('chAiBtn_' + uid);
+        const statusEl = document.getElementById('chAiStatus_' + uid);
+        const outEl = document.getElementById('chAiOutput_' + uid);
+        if(!data || !btn || !statusEl || !outEl) return;
 
-  const setStatus = (msg, isErr) => {
-    statusEl.textContent = msg;
-    statusEl.className = 'status' + (isErr ? ' err' : '');
-  };
+        const setStatus = (msg, isErr) => {
+              statusEl.textContent = msg;
+              statusEl.className = 'status' + (isErr ? ' err' : '');
+        };
 
-  if(!data.videos.length){ setStatus('Kênh này chưa có video nào trong khung thời gian đã quét.', true); return; }
+        if(!data.videos.length){ setStatus('Kênh này chưa có video nào trong khung thời gian đã quét.', true); return; }
 
-  const model = document.getElementById('geminiModel').value.trim() || 'gemini-3.5-flash';
-  const picked = [...data.videos].sort((a,b) => b.vph - a.vph).slice(0, 15);
+        const model = document.getElementById('geminiModel').value.trim() || 'gemini-3.5-flash';
+        const picked = [...data.videos].sort((a,b) => b.vph - a.vph).slice(0, 15);
 
-  btn.disabled = true;
-  outEl.innerHTML = '';
-      setStatus('Đang tải thumbnail...');
+        btn.disabled = true;
+        outEl.innerHTML = '';
+        setStatus('Đang tải thumbnail...');
 
-  const listText = picked.map((v,i) =>
-    `${i+1}. "${v.title}" — VPH ${fmtVph(v.vph)}, ${fmtNum(v.views)} view, ${v.isShort?'Shorts':'Video dài'}${v.hot?' [ĐANG LÊN]':''}`
-  ).join('\n');
+        const listText = picked.map((v,i) =>
+              `${i+1}. "${v.title}" — VPH ${fmtVph(v.vph)}, ${fmtNum(v.views)} view, ${v.isShort?'Shorts':'Video dài'}${v.hot?' [ĐANG LÊN]':''}`
+                                      ).join('\n');
 
-  const imageParts = [];
-  for(const v of picked.slice(0, 10)){
-    const b64 = await fetchThumbBase64(v.thumb);
-    if(b64) imageParts.push({inlineData:{mimeType:'image/jpeg', data:b64}});
-}
+        const imageParts = [];
+        for(const v of picked.slice(0, 10)){    const b64 = await fetchThumbBase64(v.thumb);
+                                                if(b64) imageParts.push({inlineData:{mimeType:'image/jpeg', data:b64}});
+                                           }
 
-  const prompt = `Bạn là chuyên gia phân tích kênh YouTube. Dưới đây là ${picked.length} video gần đây (đã sắp theo VPH giảm dần) của kênh đối thủ "${data.channelTitle}":
+        const prompt = `Bạn là chuyên gia phân tích kênh YouTube. Dưới đây là ${picked.length} video gần đây (đã sắp theo VPH giảm dần) của kênh đối thủ "${data.channelTitle}":
 
-${listText}
+        ${listText}
 
-${imageParts.length ? `Kèm theo ${imageParts.length} ảnh thumbnail tương ứng, đúng theo thứ tự trong danh sách trên.` : 'Không có ảnh thumbnail đính kèm, chỉ phân tích dựa trên tiêu đề.'}
+        ${imageParts.length ? `Kèm theo ${imageParts.length} ảnh thumbnail tương ứng, đúng theo thứ tự trong danh sách trên.` : 'Không có ảnh thumbnail đính kèm, chỉ phân tích dựa trên tiêu đề.'}
 
-Hãy phân tích PHONG CÁCH RIÊNG của kênh này, trình bày ngắn gọn, đúng cấu trúc sau:
+        Hãy phân tích PHONG CÁCH RIÊNG của kênh này, trình bày ngắn gọn, đúng cấu trúc sau:
 
-**1. Chủ đề/nội dung đặc trưng của kênh**
-**2. Công thức đặt tiêu đề & từ khóa hay dùng**
-**3. Đặc điểm thumbnail** (màu sắc, bố cục, cảm xúc, chữ trên ảnh — nếu có ảnh kèm)
-**4. Video nào đang lên và vì sao có thể nó hiệu quả** (nếu có video đánh dấu [ĐANG LÊN])
-**5. Đề xuất áp dụng** — 3-5 hành động cụ thể cho kênh của mình dựa trên phong cách kênh này
+        **1. Chủ đề/nội dung đặc trưng của kênh**
+        **2. Công thức đặt tiêu đề & từ khóa hay dùng**
+        **3. Đặc điểm thumbnail** (màu sắc, bố cục, cảm xúc, chữ trên ảnh — nếu có ảnh kèm)
+        **4. Video nào đang lên và vì sao có thể nó hiệu quả** (nếu có video đánh dấu [ĐANG LÊN])
+        **5. Đề xuất áp dụng** — 3-5 hành động cụ thể cho kênh của mình dựa trên phong cách kênh này
 
-Trả lời bằng tiếng Việt, súc tích, ưu tiên gạch đầu dòng, không lan man.`;
+        Trả lời bằng tiếng Việt, súc tích, ưu tiên gạch đầu dòng, không lan man.`;
 
-  const parts = [{text: prompt}, ...imageParts];
-  setStatus('Đang phân tích với Gemini...');
+        const parts = [{text: prompt}, ...imageParts];
+        setStatus('Đang phân tích với Gemini...');
 
-  try{
-    const resData = await callGeminiProxy(model, parts, (n) => setStatus(`Gặp lỗi tạm thời, đang thử lại (lần ${n})...`));
-    const cand = resData.candidates && resData.candidates[0];
-    const text = cand && cand.content && cand.content.parts ? cand.content.parts.map(p => p.text || '').join('') : '';
-    if(!text) throw new Error('Không nhận được nội dung phân tích (có thể bị chặn bởi bộ lọc an toàn của model).');
-    outEl.innerHTML = `<div class="ai-result">${formatAIText(text)}</div>`;
-    setStatus(`Xong — đã phân tích ${picked.length} video (${imageParts.length} kèm ảnh thumbnail).`);
-}catch(e){
-    setStatus('Lỗi: ' + e.message, true);
-}
-  btn.disabled = false;
-}
+        try{
+              const resData = await callGeminiProxy(model, parts, (n) => setStatus(`Gặp lỗi tạm thời, đang thử lại (lần ${n})...`));
+              const cand = resData.candidates && resData.candidates[0];
+              const text = cand && cand.content && cand.content.parts ? cand.content.parts.map(p => p.text || '').join('') : '';
+              if(!text) throw new Error('Không nhận được nội dung phân tích (có thể bị chặn bởi bộ lọc an toàn của model).');
+              outEl.innerHTML = `<div class="ai-result">${formatAIText(text)}</div>`;
+              setStatus(`Xong — đã phân tích ${picked.length} video (${imageParts.length} kèm ảnh thumbnail).`);
+        }catch(e){
+              setStatus('Lỗi: ' + e.message, true);
+        }
+        btn.disabled = false;
+    }
 
-// Tải thumbnail chất lượng cao nhất: thử maxres -> sd -> hq -> mq -> default,
-          // dùng ảnh đầu tiên có kích thước thật (YouTube trả ảnh giữ chỗ 120x90 khi không có bản maxres/sd).
-          async function fetchBestThumbnailBlob(videoId){
-              const candidates = [
-                    `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
-                    `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`,
-                    `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-                    `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
-                    `https://i.ytimg.com/vi/${videoId}/default.jpg`
-                  ];
-              let fallback = null;
-              for(const url of candidates){
-                    try{
-                            const res = await fetch(url);
-                            if(!res.ok) continue;
-                            const blob = await res.blob();
-                            const width = await new Promise((resolve) => {
-                                      const img = new Image();
-                                      const objUrl = URL.createObjectURL(blob);
-                                      img.onload = () => { resolve(img.naturalWidth); URL.revokeObjectURL(objUrl); };
-                                      img.onerror = () => { resolve(0); URL.revokeObjectURL(objUrl); };
-                                      img.src = objUrl;
-                            });
-                            if(width > 120) return blob;
-                            if(!fallback) fallback = blob;
-                    }catch(e){ }
-              }
-              return fallback;
-          }
-          
-          function sanitizeFilename(name){
-              return (name || 'thumbnail').replace(/[\\/:*?"<>|]/g, '_').trim().slice(0, 100);
-          }
-          
-          async function downloadThumbnail(videoId, btn){
-              const original = btn.textContent;
-              btn.textContent = '...';
-              btn.disabled = true;
+    async function fetchBestThumbnailBlob(videoId){
+        const candidates = [
+              `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
+              `https://i.ytimg.com/vi/${videoId}/sddefault.jpg`,
+              `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+              `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
+              `https://i.ytimg.com/vi/${videoId}/default.jpg`
+            ];
+        let fallback = null;
+        for(const url of candidates){
               try{
-                    const blob = await fetchBestThumbnailBlob(videoId);
-                    if(!blob) throw new Error('Không tìm thấy thumbnail.');
-                    const title = videoDataMap[videoId] || videoId;
-                    const objUrl = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = objUrl;
-                    a.download = sanitizeFilename(title) + '.jpg';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    setTimeout(() => URL.revokeObjectURL(objUrl), 2000);
-              }catch(e){
-                    alert('Không tải được thumbnail cho video này.');
-              }
-              btn.textContent = original;
-              btn.disabled = false;
-          }
-          
-          // Khôi phục chủ đề/kênh/cài đặt đã lưu từ lần trước (nếu có), và tự động lưu mỗi khi có thay đổi.
-loadConfig();
-  if(!TEAM_PASSWORD){ showGate(); }
-  document.getElementById('gatePassword').addEventListener('keydown', (e) => { if(e.key === 'Enter') submitGatePassword(); });
-document.getElementById('topicContainer').addEventListener('input', saveConfig);
-document.getElementById('numVideos').addEventListener('input', saveConfig);
-document.getElementById('numDays').addEventListener('input', saveConfig);
-document.getElementById('threshold').addEventListener('input', saveConfig);
-</script>
-</body>
-</html>
+                      const res = await fetch(url);
+                      if(!res.ok) continue;
+                      const blob = await res.blob();
+                      const width = await new Promise((resolve) => {
+                                const img = new Image();
+                                const objUrl = URL.createObjectURL(blob);
+                                img.onload = () => { resolve(img.naturalWidth); URL.revokeObjectURL(objUrl); };
+                                img.onerror = () => { resolve(0); URL.revokeObjectURL(objUrl); };
+                                img.src = objUrl;
+                      });
+                      if(width > 120) return blob;
+                      if(!fallback) fallback = blob;
+              }catch(e){ }
+        }  return fallback;
+    }
+
+    function sanitizeFilename(name){
+        return (name || 'thumbnail').replace(/[\\/:*?"<>|]/g, '_').trim().slice(0, 100);
+    }
+
+    async function downloadThumbnail(videoId, btn){
+        const original = btn.textContent;
+        btn.textContent = '...';
+        btn.disabled = true;
+        try{
+              const blob = await fetchBestThumbnailBlob(videoId);
+              if(!blob) throw new Error('Không tìm thấy thumbnail.');
+              const title = videoDataMap[videoId] || videoId;
+              const objUrl = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = objUrl;
+              a.download = sanitizeFilename(title) + '.jpg';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              setTimeout(() => URL.revokeObjectURL(objUrl), 2000);
+        }catch(e){
+              alert('Không tải được thumbnail cho video này.');
+        }
+        btn.textContent = original;
+        btn.disabled = false;
+    }
+
+    loadConfig();
+    if(!TEAM_PASSWORD){ showGate(); }
+    document.getElementById('gatePassword').addEventListener('keydown', (e) => { if(e.key === 'Enter') submitGatePassword(); });
+    document.getElementById('topicContainer').addEventListener('input', saveConfig);
+    document.getElementById('numVideos').addEventListener('input', saveConfig);
+    document.getElementById('numDays').addEventListener('input', saveConfig);
+    document.getElementById('threshold').addEventListener('input', saveConfig);
+  </script>
+  </body>
+</html>html>
+  </script></p></h2>
+  </body>
+  </style></title>
+  </head>
