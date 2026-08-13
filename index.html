@@ -837,7 +837,7 @@
                       block.style.display = '';
                       return;
               }
-              const anyVideoVisible = Array.from(block.querySelectorAll('table tr')).some(r => r.style.display !== 'none');
+                  const anyVideoVisible = Array.from(block.querySelectorAll('table tbody tr')).some(r => r.style.display !== 'none');
               block.style.display = anyVideoVisible ? '' : 'none';
         });
     }
