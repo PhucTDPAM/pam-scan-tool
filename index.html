@@ -158,105 +158,105 @@
                       <h2>🔒 CHECK THỊ TRƯỜNG</h2>
                     <p>Nhập mật khẩu chung của nhóm để tiếp tục.</p>
                     <input type="password" id="gatePassword" placeholder="Mật khẩu">
-                    <button class="btn" onclick="submitGatePassword()">Vào tool</button>button>
-                    <div class="gate-err" id="gateErr"></div>div>
-              </div>div>
-        </div>div>
+                    <button class="btn" onclick="submitGatePassword()">Vào tool</button>
+                    <div class="gate-err" id="gateErr"></div>
+              </div>
+        </div>
     
-      <div class="header"><img class="brand-logo" src="pam-media-logo.png" alt="PAM Media"><div class="dot"></div>div><h1>Check thị trường</h1></div>div>
-      <div class="sub">Quét nhiều chủ đề cùng lúc · mỗi chủ đề 1 sheet riêng · tính VPH · lọc video đang lên · phân tích AI theo từng chủ đề</div>div>
+      <div class="header"><img class="brand-logo" src="pam-media-logo.png" alt="PAM Media"><div class="dot"></div><h1>Check thị trường</h1></div>
+      <div class="sub">Quét nhiều chủ đề cùng lúc · mỗi chủ đề 1 sheet riêng · tính VPH · lọc video đang lên · phân tích AI theo từng chủ đề</div>
     
       <div class="panel">
-          <div class="hint" style="margin:0 0 16px; font-size:12.5px;">🔒 Kết nối qua backend chung của nhóm — API key do quản trị viên quản lý, nhân sự không cần và không thể nhập/xem key.</div>div>
+          <div class="hint" style="margin:0 0 16px; font-size:12.5px;">🔒 Kết nối qua backend chung của nhóm — API key do quản trị viên quản lý, nhân sự không cần và không thể nhập/xem key.</div>
       
           <div class="section-label" style="margin-top:0;">
-                <span class="label" style="margin:0;">Chủ đề & kênh đối thủ (mỗi chủ đề 1 thẻ, mỗi dòng kênh 1 kênh)</span>span>
-          </div>div>
+                <span class="label" style="margin:0;">Chủ đề & kênh đối thủ (mỗi chủ đề 1 thẻ, mỗi dòng kênh 1 kênh)</span>
+          </div>
           <div class="topic-grid" id="topicContainer">
                 <div class="topic-card" data-id="topic_1">
                         <div class="topic-card-head">
                                   <input type="text" class="topic-name" value="" placeholder="Tên chủ đề (vd: Khỉ)">
-                                  <button class="topic-remove" onclick="removeTopicBlock('topic_1')" title="Xoá chủ đề">✕</button>button>
-                        </div>div>
+                                  <button class="topic-remove" onclick="removeTopicBlock('topic_1')" title="Xoá chủ đề">✕</button>
+                        </div>
                         <textarea class="topic-channels" placeholder="https://youtube.com/@tenkenh
                           @tenkenh2
                           UCxxxxxxxxxxxxxxxxxxxxxx"></textarea>
-                        <button class="btn secondary topic-scan-btn" onclick="runScanTopic('topic_1', this)">Quét chủ đề này</button>button>
-                </div>div>
-                <button class="add-topic-btn" onclick="addTopicBlock()">+ Thêm chủ đề</button>button>
-          </div>div>
+                        <button class="btn secondary topic-scan-btn" onclick="runScanTopic('topic_1', this)">Quét chủ đề này</button>
+                </div>
+                <button class="add-topic-btn" onclick="addTopicBlock()">+ Thêm chủ đề</button>
+          </div>
       
           <div class="row-inline">
                 <div class="field-inline" id="numVideosField">
-                        <span class="label">Số video tối đa / kênh</span>span>        <input type="number" id="numVideos" value="30" min="5" max="300">
-                </div>div>
+                        <span class="label">Số video tối đa / kênh</span>        <input type="number" id="numVideos" value="30" min="5" max="300">
+                </div>
                 <div class="field-inline">
                         <div id="numDaysField">
-                                  <span class="label">Chỉ xét video trong (ngày)</span>span>
+                                  <span class="label">Chỉ xét video trong (ngày)</span>
                                   <input type="number" id="numDays" value="14" min="1" max="3650">
-                        </div>div>
+                        </div>
                         <label style="display:flex; align-items:center; gap:6px; margin-top:6px; font-size:11.5px; color:var(--dim); cursor:pointer; font-family:'Inter',sans-serif;">
                                   <input type="checkbox" id="allTime" onchange="toggleAllTime()" style="accent-color:var(--hot); width:13px; height:13px; cursor:pointer;">
                                   Toàn thời gian
-                        </label>label>
+                        </label>
                         <label style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:11.5px; color:var(--dim); cursor:pointer; font-family:'Inter',sans-serif;">
                                   <input type="checkbox" id="unlimitedPages" onchange="toggleUnlimitedPages()" style="accent-color:var(--hot); width:13px; height:13px; cursor:pointer;">
                                   Bỏ giới hạn 500 video/kênh (kênh cực nhiều video, tốn quota hơn)
-                        </label>label>
-                </div>div>
+                        </label>
+                </div>
                 <div class="field-inline">
-                        <span class="label">Ngưỡng "đang lên" (x lần trung bình)</span>span>
+                        <span class="label">Ngưỡng "đang lên" (x lần trung bình)</span>
                         <input type="number" id="threshold" value="1.5" min="1" max="10" step="0.1">
-                </div>div>
-          </div>div>
-          <div class="hint" style="margin-top:8px;">Tool tự lấy đủ video trong đúng số ngày đã chọn (tự phân trang) — số "video tối đa" chỉ là giới hạn an toàn, không phải số video cố định phải lấy.</div>div>
+                </div>
+          </div>
+          <div class="hint" style="margin-top:8px;">Tool tự lấy đủ video trong đúng số ngày đã chọn (tự phân trang) — số "video tối đa" chỉ là giới hạn an toàn, không phải số video cố định phải lấy.</div>
       
           <div class="actions">
-                <button class="btn" id="runBtn" onclick="runScan()">Quét tất cả chủ đề</button>button>
-                <button class="btn secondary" onclick="resetAll()">Xoá kết quả</button>button>
+                <button class="btn" id="runBtn" onclick="runScan()">Quét tất cả chủ đề</button>
+                <button class="btn secondary" onclick="resetAll()">Xoá kết quả</button>
                 <label class="auto-toggle">
                         <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()">
                         Tự động cập nhật mỗi 5 phút
-                </label>label>
-                <span class="status" id="statusText"></span>span>
-          </div>div>
-          <div class="hint" style="margin-top:10px;">Tự động cập nhật chỉ chạy khi tab này còn mở trên trình duyệt.</div>div>
-      </div>div>
+                </label>
+                <span class="status" id="statusText"></span>
+          </div>
+          <div class="hint" style="margin-top:10px;">Tự động cập nhật chỉ chạy khi tab này còn mở trên trình duyệt.</div>
+      </div>
     
     
       <div class="panel" id="aiPanel">
-          <div id="aiAllNotice" class="hint" style="display:none; font-size:13px;">Các chủ đề khác nhau (khỉ, kids, robo...) không có đặc điểm nội dung chung để so sánh, nên AI không phân tích gộp ở tab "Tất cả". Chọn 1 sheet chủ đề cụ thể ở tab bên dưới để dùng tính năng này.</div>div>
+          <div id="aiAllNotice" class="hint" style="display:none; font-size:13px;">Các chủ đề khác nhau (khỉ, kids, robo...) không có đặc điểm nội dung chung để so sánh, nên AI không phân tích gộp ở tab "Tất cả". Chọn 1 sheet chủ đề cụ thể ở tab bên dưới để dùng tính năng này.</div>
           <div id="aiControls">
                 <div style="max-width:320px;">
-                        <span class="label">Model</span>span>
+                        <span class="label">Model</span>
                         <input type="text" id="geminiModel" value="gemini-3.5-flash">
-                        <div class="hint">Đổi tên model nếu cần bản khác (vd: gemini-3.6-flash). Key AI dùng chung qua backend, không cần nhập.</div>div>
-                </div>div>
+                        <div class="hint">Đổi tên model nếu cần bản khác (vd: gemini-3.6-flash). Key AI dùng chung qua backend, không cần nhập.</div>
+                </div>
                 <div class="actions">
-                        <button class="btn" id="aiBtn" onclick="analyzeWithGemini()">Phân tích đặc điểm chung bằng AI</button>button>
-                        <span class="status" id="aiStatus">Quét trước, chọn 1 sheet chủ đề, rồi bấm để AI phân tích.</span>span>
-                </div>div>
-                <div id="aiOutput"></div>div>
-          </div>div>  </div>div>
+                        <button class="btn" id="aiBtn" onclick="analyzeWithGemini()">Phân tích đặc điểm chung bằng AI</button>
+                        <span class="status" id="aiStatus">Quét trước, chọn 1 sheet chủ đề, rồi bấm để AI phân tích.</span>
+                </div>
+                <div id="aiOutput"></div>
+          </div>  </div>
     
       <div class="panel" style="padding:14px 22px;">
           <div class="row-inline" style="margin-top:0;">
                 <div class="field-inline" style="flex:1; min-width:220px;">
-                        <span class="label">Từ khoá tên kênh</span>span>
+                        <span class="label">Từ khoá tên kênh</span>
                         <input type="text" id="channelKeywordFilter" placeholder="Vd: Kika..." oninput="applyKeywordFilter()" style="width:100%;">
-                </div>div>
+                </div>
                 <div class="field-inline" style="flex:1; min-width:220px;">
-                        <span class="label">Từ khoá tiêu đề video</span>span>
+                        <span class="label">Từ khoá tiêu đề video</span>
                         <input type="text" id="videoKeywordFilter" placeholder="Vd: thử thách..." oninput="applyKeywordFilter()" style="width:100%;">
-                </div>div>
-          </div>div>
-          <div class="hint" style="margin-top:8px;">Dùng đồng thời 2 ô để lọc kết hợp (kênh khớp VÀ video khớp) — lọc trực tiếp trong kết quả đã quét, không cần quét lại.</div>div>
-      </div>div>
+                </div>
+          </div>
+          <div class="hint" style="margin-top:8px;">Dùng đồng thời 2 ô để lọc kết hợp (kênh khớp VÀ video khớp) — lọc trực tiếp trong kết quả đã quét, không cần quét lại.</div>
+      </div>
     
-      <div class="tab-bar" id="tabBar"></div>div>
-      <div id="resultsContent"></div>div>
+      <div class="tab-bar" id="tabBar"></div>
+      <div id="resultsContent"></div>
     
-    </div>div>
+    </div>
   
   <script>
     const STOPWORDS = new Set(("và của là có cho khi để trong với các một những này đó bị được sẽ đã đang rất nhiều ít cũng thì mà như nên vì nếu nhưng hay hoặc tại từ đến về ra vào lên xuống trên dưới sau trước giữa mỗi mọi ai gì sao nào bao nhiêu làm chỉ còn vẫn đâu ơi ạ nhé nha đi lại mới luôn quá thật sự việc người ngày năm tháng tuần giờ phút giây không chưa phải cần muốn thấy biết nói xem video kênh tập phần full trọn bộ tại the a an of to and in on is are").split(" "));
