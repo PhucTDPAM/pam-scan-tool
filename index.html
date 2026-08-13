@@ -2,8 +2,7 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8">
-    <title>PAM - Check Thị Trường</title>
-    <link rel="icon" type="image/png" href="pam-media-logo.png">
+    <title>Đài quan sát đối thủ</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
@@ -158,101 +157,110 @@
                       <h2>🔒 CHECK THỊ TRƯỜNG</h2>
                     <p>Nhập mật khẩu chung của nhóm để tiếp tục.</p>
                     <input type="password" id="gatePassword" placeholder="Mật khẩu">
-                    <button class="btn" onclick="submitGatePassword()">Vào tool</button>
-                    <div class="gate-err" id="gateErr"></div>
-              </div>
-        </div>
+                    <button class="btn" onclick="submitGatePassword()">Vào tool</button>button>
+                    <div class="gate-err" id="gateErr"></div>div>
+              </div>div>
+        </div>div>
     
-      <div class="header"><img class="brand-logo" src="pam-media-logo.png" alt="PAM Media"><div class="dot"></div><h1>Check thị trường</h1></div>
-      <div class="sub">Quét nhiều chủ đề cùng lúc · mỗi chủ đề 1 sheet riêng · tính VPH · lọc video đang lên · phân tích AI theo từng chủ đề</div>
+      <div class="header"><img class="brand-logo" src="pam-media-logo.png" alt="PAM Media"><div class="dot"></div>div><h1>Check thị trường</h1></div>div>
+      <div class="sub">Quét nhiều chủ đề cùng lúc · mỗi chủ đề 1 sheet riêng · tính VPH · lọc video đang lên · phân tích AI theo từng chủ đề</div>div>
     
       <div class="panel">
-          <div class="hint" style="margin:0 0 16px; font-size:12.5px;">🔒 Kết nối qua backend chung của nhóm — API key do quản trị viên quản lý, nhân sự không cần và không thể nhập/xem key.</div>
+          <div class="hint" style="margin:0 0 16px; font-size:12.5px;">🔒 Kết nối qua backend chung của nhóm — API key do quản trị viên quản lý, nhân sự không cần và không thể nhập/xem key.</div>div>
       
           <div class="section-label" style="margin-top:0;">
-                <span class="label" style="margin:0;">Chủ đề & kênh đối thủ (mỗi chủ đề 1 thẻ, mỗi dòng kênh 1 kênh)</span>
-          </div>
+                <span class="label" style="margin:0;">Chủ đề & kênh đối thủ (mỗi chủ đề 1 thẻ, mỗi dòng kênh 1 kênh)</span>span>
+          </div>div>
           <div class="topic-grid" id="topicContainer">
                 <div class="topic-card" data-id="topic_1">
                         <div class="topic-card-head">
                                   <input type="text" class="topic-name" value="" placeholder="Tên chủ đề (vd: Khỉ)">
-                                  <button class="topic-remove" onclick="removeTopicBlock('topic_1')" title="Xoá chủ đề">✕</button>
-                        </div>
+                                  <button class="topic-remove" onclick="removeTopicBlock('topic_1')" title="Xoá chủ đề">✕</button>button>
+                        </div>div>
                         <textarea class="topic-channels" placeholder="https://youtube.com/@tenkenh
                           @tenkenh2
                           UCxxxxxxxxxxxxxxxxxxxxxx"></textarea>
-                        <button class="btn secondary topic-scan-btn" onclick="runScanTopic('topic_1', this)">Quét chủ đề này</button>
-                </div>
-                <button class="add-topic-btn" onclick="addTopicBlock()">+ Thêm chủ đề</button>
-          </div>
+                        <button class="btn secondary topic-scan-btn" onclick="runScanTopic('topic_1', this)">Quét chủ đề này</button>button>
+                </div>div>
+                <button class="add-topic-btn" onclick="addTopicBlock()">+ Thêm chủ đề</button>button>
+          </div>div>
       
           <div class="row-inline">
+                <div class="field-inline" id="numVideosField">
+                        <span class="label">Số video tối đa / kênh</span>span>        <input type="number" id="numVideos" value="30" min="5" max="300">
+                </div>div>
                 <div class="field-inline">
-                        <span class="label">Số video tối đa / kênh</span>        <input type="number" id="numVideos" value="30" min="5" max="300">
-                </div>
-                <div class="field-inline">
-                        <span class="label">Chỉ xét video trong (ngày)</span>
-                        <input type="number" id="numDays" value="14" min="1" max="3650">
+                        <div id="numDaysField">
+                                  <span class="label">Chỉ xét video trong (ngày)</span>span>
+                                  <input type="number" id="numDays" value="14" min="1" max="3650">
+                        </div>div>
                         <label style="display:flex; align-items:center; gap:6px; margin-top:6px; font-size:11.5px; color:var(--dim); cursor:pointer; font-family:'Inter',sans-serif;">
                                   <input type="checkbox" id="allTime" onchange="toggleAllTime()" style="accent-color:var(--hot); width:13px; height:13px; cursor:pointer;">
                                   Toàn thời gian
-                        </label>
+                        </label>label>
                         <label style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:11.5px; color:var(--dim); cursor:pointer; font-family:'Inter',sans-serif;">
-                                  <input type="checkbox" id="unlimitedPages" onchange="saveConfig()" style="accent-color:var(--hot); width:13px; height:13px; cursor:pointer;">
+                                  <input type="checkbox" id="unlimitedPages" onchange="toggleUnlimitedPages()" style="accent-color:var(--hot); width:13px; height:13px; cursor:pointer;">
                                   Bỏ giới hạn 500 video/kênh (kênh cực nhiều video, tốn quota hơn)
-                        </label>
-                </div>
+                        </label>label>
+                </div>div>
                 <div class="field-inline">
-                        <span class="label">Ngưỡng "đang lên" (x lần trung bình)</span>
+                        <span class="label">Ngưỡng "đang lên" (x lần trung bình)</span>span>
                         <input type="number" id="threshold" value="1.5" min="1" max="10" step="0.1">
-                </div>
-          </div>
-          <div class="hint" style="margin-top:8px;">Tool tự lấy đủ video trong đúng số ngày đã chọn (tự phân trang) — số "video tối đa" chỉ là giới hạn an toàn, không phải số video cố định phải lấy.</div>
+                </div>div>
+          </div>div>
+          <div class="hint" style="margin-top:8px;">Tool tự lấy đủ video trong đúng số ngày đã chọn (tự phân trang) — số "video tối đa" chỉ là giới hạn an toàn, không phải số video cố định phải lấy.</div>div>
       
           <div class="actions">
-                <button class="btn" id="runBtn" onclick="runScan()">Quét tất cả chủ đề</button>
-                <button class="btn secondary" onclick="resetAll()">Xoá kết quả</button>
+                <button class="btn" id="runBtn" onclick="runScan()">Quét tất cả chủ đề</button>button>
+                <button class="btn secondary" onclick="resetAll()">Xoá kết quả</button>button>
                 <label class="auto-toggle">
                         <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()">
                         Tự động cập nhật mỗi 5 phút
-                </label>
-                <span class="status" id="statusText"></span>
-          </div>
-          <div class="hint" style="margin-top:10px;">Tự động cập nhật chỉ chạy khi tab này còn mở trên trình duyệt.</div>
-      </div>
+                </label>label>
+                <span class="status" id="statusText"></span>span>
+          </div>div>
+          <div class="hint" style="margin-top:10px;">Tự động cập nhật chỉ chạy khi tab này còn mở trên trình duyệt.</div>div>
+      </div>div>
     
     
       <div class="panel" id="aiPanel">
-          <div id="aiAllNotice" class="hint" style="display:none; font-size:13px;">Các chủ đề khác nhau (khỉ, kids, robo...) không có đặc điểm nội dung chung để so sánh, nên AI không phân tích gộp ở tab "Tất cả". Chọn 1 sheet chủ đề cụ thể ở tab bên dưới để dùng tính năng này.</div>
+          <div id="aiAllNotice" class="hint" style="display:none; font-size:13px;">Các chủ đề khác nhau (khỉ, kids, robo...) không có đặc điểm nội dung chung để so sánh, nên AI không phân tích gộp ở tab "Tất cả". Chọn 1 sheet chủ đề cụ thể ở tab bên dưới để dùng tính năng này.</div>div>
           <div id="aiControls">
                 <div style="max-width:320px;">
-                        <span class="label">Model</span>
+                        <span class="label">Model</span>span>
                         <input type="text" id="geminiModel" value="gemini-3.5-flash">
-                        <div class="hint">Đổi tên model nếu cần bản khác (vd: gemini-3.6-flash). Key AI dùng chung qua backend, không cần nhập.</div>
-                </div>
+                        <div class="hint">Đổi tên model nếu cần bản khác (vd: gemini-3.6-flash). Key AI dùng chung qua backend, không cần nhập.</div>div>
+                </div>div>
                 <div class="actions">
-                        <button class="btn" id="aiBtn" onclick="analyzeWithGemini()">Phân tích đặc điểm chung bằng AI</button>
-                        <span class="status" id="aiStatus">Quét trước, chọn 1 sheet chủ đề, rồi bấm để AI phân tích.</span>
-                </div>
-                <div id="aiOutput"></div>
-          </div>
-      </div>
+                        <button class="btn" id="aiBtn" onclick="analyzeWithGemini()">Phân tích đặc điểm chung bằng AI</button>button>
+                        <span class="status" id="aiStatus">Quét trước, chọn 1 sheet chủ đề, rồi bấm để AI phân tích.</span>span>
+                </div>div>
+                <div id="aiOutput"></div>div>
+          </div>div>  </div>div>
     
-      <div class="panel" style="padding:14px 22px;">    <span class="label" style="margin-bottom:4px;">Tìm theo từ khoá (tên kênh hoặc tiêu đề video)</span>
-          <input type="text" id="keywordFilter" placeholder="Nhập từ khoá rồi lọc trực tiếp trong kết quả..." oninput="applyKeywordFilter()">
-      </div>
+      <div class="panel" style="padding:14px 22px;">
+          <div class="row-inline" style="margin-top:0;">
+                <div class="field-inline" style="flex:1; min-width:220px;">
+                        <span class="label">Từ khoá tên kênh</span>span>
+                        <input type="text" id="channelKeywordFilter" placeholder="Vd: Kika..." oninput="applyKeywordFilter()" style="width:100%;">
+                </div>div>
+                <div class="field-inline" style="flex:1; min-width:220px;">
+                        <span class="label">Từ khoá tiêu đề video</span>span>
+                        <input type="text" id="videoKeywordFilter" placeholder="Vd: thử thách..." oninput="applyKeywordFilter()" style="width:100%;">
+                </div>div>
+          </div>div>
+          <div class="hint" style="margin-top:8px;">Dùng đồng thời 2 ô để lọc kết hợp (kênh khớp VÀ video khớp) — lọc trực tiếp trong kết quả đã quét, không cần quét lại.</div>div>
+      </div>div>
     
-      <div class="tab-bar" id="tabBar"></div>
-      <div id="resultsContent"></div>
+      <div class="tab-bar" id="tabBar"></div>div>
+      <div id="resultsContent"></div>div>
     
-    </div>
+    </div>div>
   
   <script>
     const STOPWORDS = new Set(("và của là có cho khi để trong với các một những này đó bị được sẽ đã đang rất nhiều ít cũng thì mà như nên vì nếu nhưng hay hoặc tại từ đến về ra vào lên xuống trên dưới sau trước giữa mỗi mọi ai gì sao nào bao nhiêu làm chỉ còn vẫn đâu ơi ạ nhé nha đi lại mới luôn quá thật sự việc người ngày năm tháng tuần giờ phút giây không chưa phải cần muốn thấy biết nói xem video kênh tập phần full trọn bộ tại the a an of to and in on is are").split(" "));
 
-    // URL Worker Cloudflare (YouTube proxy)
     const PROXY_BASE = 'https://pam-scan-proxy.ducphuc20703.workers.dev';
-    // URL Vercel (Gemini proxy)
     const GEMINI_PROXY_BASE = 'https://pam-gemini-proxy.vercel.app';
 
     let TOPICS = [];
@@ -290,8 +298,7 @@
 
     function collectFullTopicsForSave(){
         return Array.from(document.querySelectorAll('.topic-card')).map(card => ({
-              name: card.querySelector('.topic-name').value,
-              channelsText: card.querySelector('.topic-channels').value
+              name: card.querySelector('.topic-name').value,    channelsText: card.querySelector('.topic-channels').value
         }));
     }
 
@@ -305,11 +312,20 @@
                       allTime: document.getElementById('allTime').checked,
                       unlimitedPages: document.getElementById('unlimitedPages').checked
               };
-              localStorage.setItem('scanToolConfig', JSON.stringify(cfg));  }catch(e){ }
+              localStorage.setItem('scanToolConfig', JSON.stringify(cfg));
+        }catch(e){ }
     }
 
     function toggleAllTime(){
-        document.getElementById('numDays').disabled = document.getElementById('allTime').checked;
+        const checked = document.getElementById('allTime').checked;
+        document.getElementById('numDays').disabled = checked;
+        document.getElementById('numDaysField').style.display = checked ? 'none' : '';
+        saveConfig();
+    }
+
+    function toggleUnlimitedPages(){
+        const checked = document.getElementById('unlimitedPages').checked;
+        document.getElementById('numVideosField').style.display = checked ? 'none' : '';
         saveConfig();
     }
 
@@ -332,8 +348,12 @@
         if(cfg.allTime){
               document.getElementById('allTime').checked = true;
               document.getElementById('numDays').disabled = true;
+              document.getElementById('numDaysField').style.display = 'none';
         }
-        if(cfg.unlimitedPages) document.getElementById('unlimitedPages').checked = true;
+        if(cfg.unlimitedPages){
+              document.getElementById('unlimitedPages').checked = true;
+              document.getElementById('numVideosField').style.display = 'none';
+        }
     }
 
 
@@ -356,7 +376,6 @@
         document.getElementById('topicContainer').insertBefore(div, document.querySelector('.add-topic-btn'));
         saveConfig();
     }
-
     function removeTopicBlock(id){
         const container = document.getElementById('topicContainer');
         const cards = container.querySelectorAll('.topic-card');
@@ -381,7 +400,8 @@
         document.getElementById('resultsContent').innerHTML = '';
         document.getElementById('aiOutput').innerHTML = '';
         document.getElementById('aiAllNotice').style.display = 'none';
-        document.getElementById('aiControls').style.display = 'block';  document.getElementById('autoRefresh').checked = false;
+        document.getElementById('aiControls').style.display = 'block';
+        document.getElementById('autoRefresh').checked = false;
         toggleAutoRefresh();
         log('');
     }
@@ -432,8 +452,7 @@
               if(!data.items || !data.items.length){
                       const s = await apiGet('search', {part:'snippet', type:'channel', q: parsed.value, maxResults:1});
                       if(s.items && s.items.length){
-                                const cid = s.items[0].snippet.channelId || s.items[0].id.channelId;
-                                data = await apiGet('channels', {part:'snippet,contentDetails', id: cid});
+                                const cid = s.items[0].snippet.channelId || s.items[0].id.channelId;        data = await apiGet('channels', {part:'snippet,contentDetails', id: cid});
                       }
               }
         }
@@ -452,7 +471,8 @@
         let pageToken = '';
         maxPages = maxPages || 10;
         for(let page = 0; page < maxPages; page++){
-              const params = {part:'contentDetails', playlistId, maxResults:50};    if(pageToken) params.pageToken = pageToken;
+              const params = {part:'contentDetails', playlistId, maxResults:50};
+              if(pageToken) params.pageToken = pageToken;
               const data = await apiGet('playlistItems', params);
               const items = data.items || [];
               if(!items.length) break;
@@ -496,8 +516,7 @@
               const durSec = parseDuration(it.contentDetails.duration || 'PT0S');
               const rr = it.contentDetails.regionRestriction;
               let region = null;
-              if(rr && rr.blocked && rr.blocked.length) region = {type:'blocked', countries: rr.blocked};
-              else if(rr && rr.allowed && rr.allowed.length) region = {type:'allowed', countries: rr.allowed};
+              if(rr && rr.blocked && rr.blocked.length) region = {type:'blocked', countries: rr.blocked};    else if(rr && rr.allowed && rr.allowed.length) region = {type:'allowed', countries: rr.allowed};
               return {
                       id: it.id,
                       title: it.snippet.title,
@@ -524,7 +543,8 @@
         let nextIndex = 0;
         async function runNext(){
               while(nextIndex < items.length){
-                      const i = nextIndex++;      results[i] = await worker(items[i]);
+                      const i = nextIndex++;
+                      results[i] = await worker(items[i]);
               }
         }
         const runners = Array.from({length: Math.min(limit, items.length)}, runNext);
@@ -575,17 +595,17 @@
               }
               topicResults.push(r);
         }
-
         return {id: topic.id, name: topic.name, results: topicResults, duplicatesRemoved};
     }
 
     async function runScan(){
         const topicsInput = collectTopicsInput();
-        const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
+        const unlimitedPages = document.getElementById('unlimitedPages').checked;
+        const numVideos = unlimitedPages ? 100000 : (parseInt(document.getElementById('numVideos').value) || 20);
         const numDays = parseInt(document.getElementById('numDays').value) || 14;
         const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
         const allTime = document.getElementById('allTime').checked;
-        const maxPages = document.getElementById('unlimitedPages').checked ? 1000 : 10;
+        const maxPages = unlimitedPages ? 1000 : 10;
 
         if(!topicsInput.length){ log('Chưa nhập kênh nào.', true); return; }
 
@@ -602,6 +622,7 @@
               });
               TOPICS.push(result);
         }
+
         const now = new Date();
         const pad = n => String(n).padStart(2,'0');
         const totalDup = TOPICS.reduce((s,t) => s + (t.duplicatesRemoved||0), 0);
@@ -622,20 +643,20 @@
         const lines = card.querySelector('.topic-channels').value.split('\n').map(l => l.trim()).filter(Boolean);
         if(!lines.length){ log(`Chủ đề "${name}" chưa nhập kênh nào.`, true); return; }
 
-        const numVideos = parseInt(document.getElementById('numVideos').value) || 20;
+        const unlimitedPages = document.getElementById('unlimitedPages').checked;
+        const numVideos = unlimitedPages ? 100000 : (parseInt(document.getElementById('numVideos').value) || 20);
         const numDays = parseInt(document.getElementById('numDays').value) || 14;
         const threshold = parseFloat(document.getElementById('threshold').value) || 1.5;
         const allTime = document.getElementById('allTime').checked;
         const cutoff = allTime ? 0 : (Date.now() - numDays*24*3600000);
-        const maxPages = document.getElementById('unlimitedPages').checked ? 1000 : 10;
+        const maxPages = unlimitedPages ? 1000 : 10;
 
         const originalText = btn.textContent;
         btn.disabled = true;
         btn.textContent = 'Đang quét...';
         document.getElementById('runBtn').disabled = true;
 
-        let doneCount = 0;
-        const result = await scanOneTopic({id: topicId, name, lines}, numVideos, threshold, cutoff, maxPages, (d, raw) => {
+        let doneCount = 0;  const result = await scanOneTopic({id: topicId, name, lines}, numVideos, threshold, cutoff, maxPages, (d, raw) => {
               doneCount++;
               log(`Đang quét "${name}": ${doneCount}/${lines.length} — ${raw}`);
         });
@@ -673,6 +694,7 @@
     function fmtStat(n){
         return (n === null || n === undefined) ? '—' : fmtNum(n);
     }
+
     function videoRow(v, prefix){
         const badge = v.hot ? `<span class="badge">🔥 Đang lên</span>` : '';
         const tag = v.isShort ? 'Shorts' : 'Video';
@@ -699,8 +721,7 @@
     }
 
     function renderHotTable(list, prefixFn){
-        if(!list.length) return `<div class="panel"><div class="empty">Chưa có video nào vượt ngưỡng "đang lên".</div></div>`;
-        let html = `<div class="panel"><table><thead><tr><th></th><th>Tiêu đề${prefixFn?' / Nguồn':''}</th><th>VPH</th><th>View</th><th>Like</th><th>Cmt</th><th>Ngày · Giờ đăng</th><th></th></tr></thead><tbody>`;
+        if(!list.length) return `<div class="panel"><div class="empty">Chưa có video nào vượt ngưỡng "đang lên".</div></div>`;  let html = `<div class="panel"><table><thead><tr><th></th><th>Tiêu đề${prefixFn?' / Nguồn':''}</th><th>VPH</th><th>View</th><th>Like</th><th>Cmt</th><th>Ngày · Giờ đăng</th><th></th></tr></thead><tbody>`;
         list.slice(0,20).forEach(v => html += videoRow(v, prefixFn ? prefixFn(v) : null));
         html += `</tbody></table></div>`;
         return html;
@@ -762,8 +783,7 @@
         const notice = document.getElementById('aiAllNotice');
         const controls = document.getElementById('aiControls');
         if(activeTab === 'ALL'){
-              notice.style.display = 'block';
-              controls.style.display = 'none';
+              notice.style.display = 'block';    controls.style.display = 'none';
         } else {
               notice.style.display = 'none';
               controls.style.display = 'block';
@@ -798,46 +818,55 @@
                       html += `<div class="topic-section-head">📁 ${t.name} <span class="ch-meta" style="margin-left:0">(${topicHotCount} đang lên)</span></div>`;
                       t.results.forEach((r, i) => html += renderChannelBlock(r, `${t.id}_${i}`));
               });
-        } else {    const topic = TOPICS.find(t => t.id === activeTab);
-                    if(!topic){ container.innerHTML = ''; return; }
-                    const hot = topic.results.flatMap(r=>r.videos).filter(v=>v.hot).sort((a,b)=>b.vph-a.vph);
-                    html += `<div class="section-title">🔥 Video đang lên — ${topic.name} (${hot.length})</div>`;
-                    html += renderHotTable(hot, v => v.channelTitle);
-                    html += renderKeywordPanel(hot);
-                    html += `<div class="section-title">Chi tiết từng kênh</div>`;
-                    topic.results.forEach((r, i) => html += renderChannelBlock(r, `${topic.id}_${i}`));
-               }
+        } else {
+              const topic = TOPICS.find(t => t.id === activeTab);
+              if(!topic){ container.innerHTML = ''; return; }
+              const hot = topic.results.flatMap(r=>r.videos).filter(v=>v.hot).sort((a,b)=>b.vph-a.vph);
+              html += `<div class="section-title">🔥 Video đang lên — ${topic.name} (${hot.length})</div>`;
+              html += renderHotTable(hot, v => v.channelTitle);
+              html += renderKeywordPanel(hot);
+              html += `<div class="section-title">Chi tiết từng kênh</div>`;
+              topic.results.forEach((r, i) => html += renderChannelBlock(r, `${topic.id}_${i}`));
+        }
 
         container.innerHTML = html;
         applyKeywordFilter();
     }
 
     function applyKeywordFilter(){
-        const input = document.getElementById('keywordFilter');
-        if(!input) return;
-        const kw = input.value.trim().toLowerCase();
-        const container2 = document.getElementById('resultsContent');
-        if(!container2) return;
+        const chInput = document.getElementById('channelKeywordFilter');
+        const vidInput = document.getElementById('videoKeywordFilter');
+        if(!chInput || !vidInput) return;
+        const chKw = chInput.value.trim().toLowerCase();
+        const vidKw = vidInput.value.trim().toLowerCase();
+        const container = document.getElementById('resultsContent');
+        if(!container) return;
 
-        if(!kw){
-              container2.querySelectorAll('tr, .channel-block').forEach(el => el.style.display = '');
+        if(!chKw && !vidKw){
+              container.querySelectorAll('tr, .channel-block').forEach(el => el.style.display = '');
               return;
         }
 
-        container2.querySelectorAll('table tr').forEach(row => {
+        container.querySelectorAll('table tr').forEach(row => {
               if(row.querySelector('th')) return;
-              row.style.display = row.textContent.toLowerCase().includes(kw) ? '' : 'none';
-        });
+              const text = row.textContent.toLowerCase();
+              const okVid = !vidKw || text.includes(vidKw);
+              const okCh = !chKw || text.includes(chKw);
+              row.style.display = (okVid && okCh) ? '' : 'none';  });
 
-        container2.querySelectorAll('.channel-block').forEach(block => {
+        container.querySelectorAll('.channel-block').forEach(block => {
               const chName = block.querySelector('.ch-name');
-              const chMatches = chName && chName.textContent.toLowerCase().includes(kw);
-              if(chMatches){
-                      block.querySelectorAll('table tr').forEach(r => r.style.display = '');
-                      block.style.display = '';
+              const chNameMatches = chName && chName.textContent.toLowerCase().includes(chKw);
+              if(chKw && chNameMatches){
+                      block.querySelectorAll('table tbody tr').forEach(r => {
+                                r.style.display = (!vidKw || r.textContent.toLowerCase().includes(vidKw)) ? '' : 'none';
+                      });
+              }
+              if(chKw && !chNameMatches){
+                      block.style.display = 'none';
                       return;
               }
-                  const anyVideoVisible = Array.from(block.querySelectorAll('table tbody tr')).some(r => r.style.display !== 'none');
+              const anyVideoVisible = Array.from(block.querySelectorAll('table tbody tr')).some(r => r.style.display !== 'none');
               block.style.display = anyVideoVisible ? '' : 'none';
         });
     }
@@ -876,7 +905,8 @@
         const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         let html = esc(text).trim();
         html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/^[-*]\s+/gm, '• ');  html = html.replace(/\n/g, '<br>');
+        html = html.replace(/^[-*]\s+/gm, '• ');
+        html = html.replace(/\n/g, '<br>');
         return html;
     }
 
@@ -900,7 +930,6 @@
                       const data = await res.json().catch(() => null);
 
                       if(res.ok && data) return data;
-
                       const isTransient = res.status >= 500 || res.status === 0;
                       if(isTransient && attempt < 2){
                                 lastErr = new Error((data && data.error && data.error.message) || `Lỗi tạm thời (HTTP ${res.status})`);
@@ -948,7 +977,8 @@
               if(b64) imageParts.push({inlineData:{mimeType:'image/jpeg', data:b64}});
         }
 
-        const groupingNote = isAll    ? 'Các video này thuộc nhiều chủ đề/niche khác nhau (đã ghi rõ tên chủ đề trước tên kênh). Nếu đặc điểm khác biệt rõ rệt giữa các chủ đề, hãy tách phân tích riêng theo từng chủ đề thay vì gộp chung một kết luận.'
+        const groupingNote = isAll
+          ? 'Các video này thuộc nhiều chủ đề/niche khác nhau (đã ghi rõ tên chủ đề trước tên kênh). Nếu đặc điểm khác biệt rõ rệt giữa các chủ đề, hãy tách phân tích riêng theo từng chủ đề thay vì gộp chung một kết luận.'
               : '';
 
         const prompt = `Bạn là chuyên gia phân tích kênh YouTube cho một công ty quản trị kênh. Dưới đây là danh sách ${picked.length} video "đang lên" (VPH cao bất thường so với trung bình kênh) thuộc ${scopeLabel} của các đối thủ:
@@ -962,8 +992,7 @@
 
         **1. Chủ đề/nội dung lặp lại**
         **2. Công thức đặt tiêu đề & từ khóa hay dùng**
-        **3. Đặc điểm thumbnail** (màu sắc, bố cục, cảm xúc, chữ trên ảnh — nếu có ảnh kèm)
-        **4. Xu hướng định dạng** (Shorts hay video dài đang thắng thế)
+        **3. Đặc điểm thumbnail** (màu sắc, bố cục, cảm xúc, chữ trên ảnh — nếu có ảnh kèm)**4. Xu hướng định dạng** (Shorts hay video dài đang thắng thế)
         **5. Đề xuất áp dụng** — 3-5 hành động cụ thể cho kênh của mình
 
         Trả lời bằng tiếng Việt, súc tích, ưu tiên gạch đầu dòng, không lan man.`;
@@ -1010,9 +1039,10 @@
                                       ).join('\n');
 
         const imageParts = [];
-        for(const v of picked.slice(0, 10)){    const b64 = await fetchThumbBase64(v.thumb);
-                                                if(b64) imageParts.push({inlineData:{mimeType:'image/jpeg', data:b64}});
-                                           }
+        for(const v of picked.slice(0, 10)){
+              const b64 = await fetchThumbBase64(v.thumb);
+              if(b64) imageParts.push({inlineData:{mimeType:'image/jpeg', data:b64}});
+        }
 
         const prompt = `Bạn là chuyên gia phân tích kênh YouTube. Dưới đây là ${picked.length} video gần đây (đã sắp theo VPH giảm dần) của kênh đối thủ "${data.channelTitle}":
 
@@ -1027,7 +1057,6 @@
         **3. Đặc điểm thumbnail** (màu sắc, bố cục, cảm xúc, chữ trên ảnh — nếu có ảnh kèm)
         **4. Video nào đang lên và vì sao có thể nó hiệu quả** (nếu có video đánh dấu [ĐANG LÊN])
         **5. Đề xuất áp dụng** — 3-5 hành động cụ thể cho kênh của mình dựa trên phong cách kênh này
-
         Trả lời bằng tiếng Việt, súc tích, ưu tiên gạch đầu dòng, không lan man.`;
 
         const parts = [{text: prompt}, ...imageParts];
@@ -1070,7 +1099,8 @@
                       if(width > 120) return blob;
                       if(!fallback) fallback = blob;
               }catch(e){ }
-        }  return fallback;
+        }
+        return fallback;
     }
 
     function sanitizeFilename(name){
@@ -1099,7 +1129,6 @@
         btn.textContent = original;
         btn.disabled = false;
     }
-
     loadConfig();
     if(!TEAM_PASSWORD){ showGate(); }
     document.getElementById('gatePassword').addEventListener('keydown', (e) => { if(e.key === 'Enter') submitGatePassword(); });
