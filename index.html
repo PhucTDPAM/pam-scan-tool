@@ -89,7 +89,7 @@
     .topic-scan-btn{width:100%; margin-top:8px; padding:8px 0; font-size:11.5px;}
     .add-topic-btn{background:transparent; border:1px dashed var(--border); color:var(--dim); border-radius:8px; padding:14px;
                      cursor:pointer; font-family:'Oswald',sans-serif; text-transform:uppercase; font-size:12px; letter-spacing:.04em;
-                     display:flex; align-items:center; justify-content:center; min-height:70px; width:100%;}
+                   display:flex; align-items:center; justify-content:center; min-height:70px; width:100%;}
     .add-topic-btn:hover{border-color:var(--mint); color:var(--mint);}
 
     /* keywords panel */
@@ -100,6 +100,10 @@
         border-radius:20px; padding:6px 13px; font-size:13px; font-family:'JetBrains Mono',monospace;
     }
     .kw-chip b{color:var(--text); font-family:'Inter',sans-serif; font-weight:600;}
+    .tags-toggle-btn{background:var(--panel2); border:1px solid var(--border); color:var(--dim); border-radius:4px; padding:2px 8px; font-size:10.5px; cursor:pointer; margin-left:7px; font-family:'Inter',sans-serif;}
+    .tags-toggle-btn:hover{color:var(--mint); border-color:var(--mint);}
+    .tag-panel{margin-top:8px; display:flex; flex-wrap:wrap; gap:6px;}
+    .kw-chip-sm{background:var(--mint-bg); border:1px solid rgba(79,209,197,0.35); color:var(--mint); border-radius:14px; padding:3px 10px; font-size:11.5px; font-family:'JetBrains Mono',monospace;}
 
     /* sheet tabs */
     .tab-bar{display:flex; gap:6px; flex-wrap:wrap; margin:28px 0 0; border-bottom:1px solid var(--border);}
@@ -447,26 +451,29 @@
     async function resolveChannel(parsed){
         let data;
         if(parsed.type === 'id'){
-              data = await apiGet('channels', {part:'snippet,contentDetails', id: parsed.value});
+              data = await apiGet('channels', {part:'snippet,contentDetails,brandingSettings', id: parsed.value});
         } else {
-              data = await apiGet('channels', {part:'snippet,contentDetails', forHandle: parsed.value});
+              data = await apiGet('channels', {part:'snippet,contentDetails,brandingSettings', forHandle: parsed.value});
               if(!data.items || !data.items.length){
                       const s = await apiGet('search', {part:'snippet', type:'channel', q: parsed.value, maxResults:1});
                       if(s.items && s.items.length){
-                                const cid = s.items[0].snippet.channelId || s.items[0].id.channelId;        data = await apiGet('channels', {part:'snippet,contentDetails', id: cid});
+                                const cid = s.items[0].snippet.channelId || s.items[0].id.channelId;
+                                data = await apiGet('channels', {part:'snippet,contentDetails,brandingSettings', id: cid});
                       }
               }
         }
         if(!data.items || !data.items.length) throw new Error('Không tìm thấy kênh');
         const it = data.items[0];
+        const keywordsRaw = it.brandingSettings && it.brandingSettings.channel ? it.brandingSettings.channel.keywords : '';
         return {
               id: it.id,
               title: it.snippet.title,
               avatar: it.snippet.thumbnails && it.snippet.thumbnails.default ? it.snippet.thumbnails.default.url : '',
-              uploadsPlaylist: it.contentDetails.relatedPlaylists.uploads
+              uploadsPlaylist: it.contentDetails.relatedPlaylists.uploads,
+              keywords: parseChannelKeywords(keywordsRaw)
         };
     }
-
+    
     async function fetchRecentVideoIds(playlistId, maxResults, cutoff, maxPages){
         let ids = [];
         let pageToken = '';
@@ -501,7 +508,7 @@
 
     async function fetchVideoDetails(ids){
         if(!ids.length) return [];
-        const chunks = [];
+      const chunks = [];
         for(let i = 0; i < ids.length; i += 50) chunks.push(ids.slice(i, i + 50));
         const responses = await Promise.all(chunks.map(chunk =>
               apiGet('videos', {part:'snippet,statistics,contentDetails', id: chunk.join(',')})
@@ -510,7 +517,7 @@
         const now = Date.now();
         return allItems.map(it => {
               const publishedAt = new Date(it.snippet.publishedAt).getTime();
-              const hours = Math.max((now - publishedAt) / 3600000, 0.1);
+                            const hours = Math.max((now - publishedAt) / 3600000, 0.1);
               const views = parseInt(it.statistics.viewCount || 0);
               const likes = it.statistics.likeCount !== undefined ? parseInt(it.statistics.likeCount) : null;
               const comments = it.statistics.commentCount !== undefined ? parseInt(it.statistics.commentCount) : null;
@@ -518,7 +525,7 @@
               const rr = it.contentDetails.regionRestriction;
               let region = null;
               if(rr && rr.blocked && rr.blocked.length) region = {type:'blocked', countries: rr.blocked};    else if(rr && rr.allowed && rr.allowed.length) region = {type:'allowed', countries: rr.allowed};
-              return {
+                return {
                       id: it.id,
                       title: it.snippet.title,
                       thumb: it.snippet.thumbnails.medium ? it.snippet.thumbnails.medium.url : it.snippet.thumbnails.default.url,
@@ -529,11 +536,25 @@
                       hours,
                       vph: views / hours,
                       isShort: durSec > 0 && durSec <= 180,
+                        tags: it.snippet.tags || [],
                       region
               };
         });
     }
 
+
+    function escapeHtml(s){
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function parseChannelKeywords(str){
+        if(!str) return [];
+        const regex = /"([^"]+)"|(\S+)/g;
+        const result = [];
+        let m;
+        while((m = regex.exec(str)) !== null) result.push(m[1] || m[2]);
+        return result;
+    }
     function extractKeywords(title){
         const clean = title.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, ' ');
         return clean.split(/\s+/).filter(w => w.length > 1 && !STOPWORDS.has(w) && !/^\d+$/.test(w));
@@ -706,19 +727,24 @@
         }
         const prefixHtml = prefix ? `<div class="dim-cell" style="margin-bottom:2px">${prefix}</div>` : '';
         videoDataMap[v.id] = v.title;
+        const tagCount = v.tags ? v.tags.length : 0;
+        const tagsBtn = `<button class="tags-toggle-btn" onclick="toggleTagPanel('vtags_${v.id}')" title="Xem tag video">🏷️ ${tagCount}</button>`;
+        const tagsPanelInner = tagCount ? v.tags.map(t => `<span class="kw-chip-sm">${escapeHtml(t)}</span>`).join('') : `<span class="dim-cell">Video này không gắn tag.</span>`;
         return `<tr>
             <td>
                   <a href="https://youtube.com/watch?v=${v.id}" target="_blank"><img class="thumb" src="${v.thumb}"></a>
                         <button class="thumb-dl-btn" onclick="downloadThumbnail('${v.id}', this)" title="Tải thumbnail chất lượng cao nhất (.jpg)">⬇ Tải ảnh</button>
                             </td>
-                                <td>${prefixHtml}<a class="vtitle" href="https://youtube.com/watch?v=${v.id}" target="_blank">${v.title}</a><span class="type-tag">${tag}</span>${regionBadge}</td>
-                                    <td class="vph" style="color:${v.hot?'var(--hot)':'var(--text)'}">${fmtVph(v.vph)}</td>
-                                        <td class="dim-cell">${fmtNum(v.views)}</td>
-                                            <td class="dim-cell">${fmtStat(v.likes)}</td>
-                                                <td class="dim-cell">${fmtStat(v.comments)}</td>
-                                                    <td class="dim-cell">${fmtDateTime(v.publishedAt)}</td>
-                                                        <td>${badge}</td>
-                                                          </tr>`;
+                                <td>${prefixHtml}<a class="vtitle" href="https://youtube.com/watch?v=${v.id}" target="_blank">${v.title}</a><span class="type-tag">${tag}</span>${regionBadge}${tagsBtn}
+                                      <div class="tag-panel" id="vtags_${v.id}" style="display:none;">${tagsPanelInner}</div>
+                                          </td>
+                                              <td class="vph" style="color:${v.hot?'var(--hot)':'var(--text)'}">${fmtVph(v.vph)}</td>
+                                                  <td class="dim-cell">${fmtNum(v.views)}</td>
+                                                      <td class="dim-cell">${fmtStat(v.likes)}</td>
+                                                          <td class="dim-cell">${fmtStat(v.comments)}</td>
+                                                              <td class="dim-cell">${fmtDateTime(v.publishedAt)}</td>
+                                                                  <td>${badge}</td>
+                                                                    </tr>`;
     }
 
     function renderHotTable(list, prefixFn){
@@ -749,12 +775,16 @@
         } else {
               const canAnalyze = r.videos.length > 0;
               if(canAnalyze) channelDataMap[uid] = { videos: r.videos, channelTitle: r.channel.title };
+              const chKeywords = r.channel.keywords || [];
+              const chTagsBtn = `<button class="tags-toggle-btn" onclick="toggleTagPanel('chtags_${uid}')" title="Xem từ khoá kênh">🏷️ ${chKeywords.length}</button>`;
               html += `<div class="channel-head">
                     ${r.channel.avatar ? `<img class="ch-avatar" src="${r.channel.avatar}">` : ''}
                           <span class="ch-name">${r.channel.title}</span>
                                 <span class="ch-meta">${r.videos.length} video · ${r.videos.filter(v=>v.hot).length} đang lên</span>
-                                      ${canAnalyze ? `<button class="btn secondary ch-ai-btn" id="chAiBtn_${uid}" onclick="analyzeChannel('${uid}')">🤖 Phân tích kênh</button>` : ''}
-                                          </div>`;
+                                      ${chTagsBtn}
+                                            ${canAnalyze ? `<button class="btn secondary ch-ai-btn" id="chAiBtn_${uid}" onclick="analyzeChannel('${uid}')">🤖 Phân tích kênh</button>` : ''}
+                                                </div>
+                                                    <div class="tag-panel" id="chtags_${uid}" style="display:none; padding:0 4px 12px;">${chKeywords.length ? chKeywords.map(k => `<span class="kw-chip-sm">${escapeHtml(k)}</span>`).join('') : `<span class="dim-cell">Kênh này chưa đặt từ khoá.</span>`}</div>`;
               if(r.videos.length){
                       html += `<table><thead><tr><th></th><th>Tiêu đề</th><th>VPH</th><th>View</th><th>Like</th><th>Cmt</th><th>Ngày · Giờ đăng</th><th></th></tr></thead><tbody>`;
                       r.videos.forEach(v => html += videoRow(v));
