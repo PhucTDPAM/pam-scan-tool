@@ -106,6 +106,13 @@
     .tag-panel{margin-top:8px; display:flex; flex-wrap:wrap; gap:6px;}
     .kw-chip-sm{background:var(--mint-bg); border:1px solid rgba(79,209,197,0.35); color:var(--mint); border-radius:14px; padding:3px 10px; font-size:11.5px; font-family:'JetBrains Mono',monospace;}
 
+    /* ô tìm kiếm kiểu YouTube */
+    .yt-search-wrap{position:relative; max-width:640px;}
+    .yt-search-icon{position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--dim); font-size:14px; pointer-events:none;}
+    #unifiedSearch{width:100%; background:var(--panel2); border:1px solid var(--border); border-radius:24px; color:var(--text); padding:12px 16px 12px 42px; font-family:'Inter',sans-serif; font-size:14.5px; outline:none;}
+    #unifiedSearch:focus{border-color:var(--mint);}
+    #unifiedSearch::placeholder{color:var(--dim);}
+
     /* sheet tabs */
     .tab-bar{display:flex; gap:6px; flex-wrap:wrap; margin:28px 0 0; border-bottom:1px solid var(--border);}
     .sheet-tab{background:var(--panel2); border:1px solid var(--border); border-bottom:none; color:var(--dim);  padding:10px 20px; border-radius:8px 8px 0 0; font-family:'Oswald',sans-serif; text-transform:uppercase;
@@ -244,19 +251,13 @@
                 <div id="aiOutput"></div>
           </div>  </div>
     
-      <div class="panel" style="padding:14px 22px;">
-          <div class="row-inline" style="margin-top:0;">
-                <div class="field-inline" style="flex:1; min-width:220px;">
-                        <span class="label">Từ khoá tên kênh</span>
-                        <input type="text" id="channelKeywordFilter" placeholder="Vd: Kika..." oninput="applyKeywordFilter()" style="width:100%;">
-                </div>
-                <div class="field-inline" style="flex:1; min-width:220px;">
-                        <span class="label">Từ khoá tiêu đề video</span>
-                        <input type="text" id="videoKeywordFilter" placeholder="Vd: thử thách..." oninput="applyKeywordFilter()" style="width:100%;">
-                </div>
-          </div>
-          <div class="hint" style="margin-top:8px;">Dùng đồng thời 2 ô để lọc kết hợp (kênh khớp VÀ video khớp) — lọc trực tiếp trong kết quả đã quét, không cần quét lại.</div>
-      </div>
+  <div class="panel" style="padding:14px 22px;">
+        <div class="yt-search-wrap">
+                <span class="yt-search-icon">🔍</span>
+                <input type="text" id="unifiedSearch" placeholder="Tìm theo tên kênh, tiêu đề video hoặc từ khoá liên quan (vd: khỉ, monkey, hài hước...)" oninput="applyKeywordFilter()">
+        </div>
+        <div class="hint" style="margin-top:8px;">Tìm trong tên kênh + tiêu đề + tag video (kể cả tag đang ẩn) trong phạm vi các kênh đã quét — nhận thêm 1 số từ đồng nghĩa Việt-Anh phổ biến. Lọc trực tiếp, không cần quét lại.</div>
+  </div>
     
       <div class="tab-bar" id="tabBar"></div>
       <div id="resultsContent"></div>
@@ -865,37 +866,75 @@
         applyKeywordFilter();
     }
 
+    // Từ điển đồng nghĩa Việt-Anh cho các từ hay gặp trong ngách kênh động vật/trẻ em — giúp gõ 1 thứ tiếng vẫn bắt được cả 2.
+    // Đây KHÔNG phải AI hiểu ngữ nghĩa thật, chỉ là ánh xạ 2 chiều cho các cụm từ phổ biến.
+    const SYNONYM_MAP = {
+        'khỉ':'monkey', 'con khỉ':'monkey',
+        'trẻ em':'kids', 'em bé':'baby', 'bé':'baby',
+        'hài':'funny', 'hài hước':'funny', 'vui nhộn':'funny', 'ngộ nghĩnh':'funny',
+        'dễ thương':'cute',
+        'động vật':'animal', 'thú cưng':'pet',
+        'thông minh':'smart',
+        'nấu ăn':'cooking', 'ăn':'eating',
+        'thử thách':'challenge',
+        'giải cứu':'rescue',
+        'xây nhà':'build house', 'nhà':'house',
+        'bơi':'swim', 'bơi lội':'swimming',
+        'chơi':'play',
+        'câu chuyện':'story',
+        'phim hoạt hình':'cartoon',
+        'video ngắn':'shorts'
+    };
+    const SYNONYM_MAP_REVERSE = {};
+    Object.entries(SYNONYM_MAP).forEach(([vi, en]) => {
+        if(!SYNONYM_MAP_REVERSE[en]) SYNONYM_MAP_REVERSE[en] = [];
+        SYNONYM_MAP_REVERSE[en].push(vi);
+    });
+
+    // Mở rộng 1 từ khoá thành danh sách các từ đồng nghĩa liên quan (cả chiều Việt→Anh và Anh→Việt).
+    function expandSynonyms(kw){
+        const terms = new Set([kw]);
+        Object.keys(SYNONYM_MAP).forEach(vi => {
+              if(vi.includes(kw) || kw.includes(vi)){
+                      terms.add(vi);
+                      terms.add(SYNONYM_MAP[vi]);
+              }
+        });
+        Object.keys(SYNONYM_MAP_REVERSE).forEach(en => {
+              if(en.includes(kw) || kw.includes(en)){
+                      terms.add(en);
+                      SYNONYM_MAP_REVERSE[en].forEach(vi => terms.add(vi));
+              }
+        });
+        return Array.from(terms);
+    }
+
     function applyKeywordFilter(){
-        const chInput = document.getElementById('channelKeywordFilter');
-        const vidInput = document.getElementById('videoKeywordFilter');
-        if(!chInput || !vidInput) return;
-        const chKw = chInput.value.trim().toLowerCase();
-        const vidKw = vidInput.value.trim().toLowerCase();
+        const input = document.getElementById('unifiedSearch');
+        if(!input) return;
+        const rawKw = input.value.trim().toLowerCase();
         const container = document.getElementById('resultsContent');
         if(!container) return;
 
-        if(!chKw && !vidKw){
+        if(!rawKw){
               container.querySelectorAll('tr, .channel-block').forEach(el => el.style.display = '');
               return;
         }
 
+        const terms = expandSynonyms(rawKw);
+        const matches = text => terms.some(t => text.includes(t));
+
         container.querySelectorAll('table tr').forEach(row => {
               if(row.querySelector('th')) return;
-              const text = row.textContent.toLowerCase();
-              const okVid = !vidKw || text.includes(vidKw);
-              const okCh = !chKw || text.includes(chKw);
-              row.style.display = (okVid && okCh) ? '' : 'none';  });
+              row.style.display = matches(row.textContent.toLowerCase()) ? '' : 'none';
+        });
 
         container.querySelectorAll('.channel-block').forEach(block => {
               const chName = block.querySelector('.ch-name');
-              const chNameMatches = chName && chName.textContent.toLowerCase().includes(chKw);
-              if(chKw && chNameMatches){
-                      block.querySelectorAll('table tbody tr').forEach(r => {
-                                r.style.display = (!vidKw || r.textContent.toLowerCase().includes(vidKw)) ? '' : 'none';
-                      });
-              }
-              if(chKw && !chNameMatches){
-                      block.style.display = 'none';
+              const chMatches = chName && matches(chName.textContent.toLowerCase());
+              if(chMatches){
+                      block.querySelectorAll('table tbody tr').forEach(r => r.style.display = '');
+                      block.style.display = '';
                       return;
               }
               const anyVideoVisible = Array.from(block.querySelectorAll('table tbody tr')).some(r => r.style.display !== 'none');
