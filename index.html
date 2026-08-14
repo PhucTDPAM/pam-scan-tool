@@ -10,7 +10,8 @@
     :root{
         --bg:#0B0E14;
         --panel:#12161F;
-        --panel2:#1A2030;
+        
+          --panel2:#1A2030;
         --border:#242B3D;
         --text:#E7E9F0;
         --dim:#8A93A8;
@@ -1138,6 +1139,11 @@
         return (name || 'thumbnail').replace(/[\\/:*?"<>|]/g, '_').trim().slice(0, 100);
     }
 
+    function toggleTagPanel(id){
+        const el = document.getElementById(id);
+        if(el) el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+    }
+    
     async function downloadThumbnail(videoId, btn){
         const original = btn.textContent;
         btn.textContent = '...';
